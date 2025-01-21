@@ -1,0 +1,6 @@
+ if the user supplies the --checksums switch, but specifies a file that is not a checksum file
+
+ validate algorithm that is passed as argument from user
+ validate output format passed as argument from user
+
+add xml format

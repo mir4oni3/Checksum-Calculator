@@ -31,8 +31,10 @@ InputFacade::InputFacade(int argc, char** argv) {
     TCLAP::CmdLine cmd("Checksum Calculator");
 
     TCLAP::ValueArg<std::string> pathArg("p", "path", "Path to target", false, ".", "string", cmd);
-    TCLAP::ValueArg<std::string> algorithmArg("a", "algorithm", "Checksum algorithm", false, "md5", "string", cmd);
     TCLAP::ValueArg<std::string> checksumsArg("c", "checksums", "Checksums to compare", false, "", "string", cmd);
+    TCLAP::SwitchArg noTraverseArg("", "no-traverse", "Don't traverse symlinks", cmd, false);
+    TCLAP::ValueArg<std::string> algorithmArg("a", "algorithm", "Checksum algorithm", false, "md5", "string", cmd);
+    TCLAP::ValueArg<std::string> formatArg("f", "format", "Output format", false, "text", "string", cmd);
 
     try {
         cmd.parse(argc, argv);
@@ -42,19 +44,32 @@ InputFacade::InputFacade(int argc, char** argv) {
         exit(1);
     }
 
+    //validated here
     this->checksums = getValidatedArg(checksumsArg);
     this->path = getValidatedArg(pathArg);
+    this->traverse = !noTraverseArg.getValue();
+
+    //validated later
+    this->output = formatArg.getValue();
     this->algorithm = algorithmArg.getValue();
 }
 
-std::string InputFacade::getAlgorithm() const {
-    return this->algorithm;
+std::string InputFacade::getPath() const {
+    return this->path;
 }
 
 std::string InputFacade::getChecksums() const {
     return this->checksums;
 }
 
-std::string InputFacade::getPath() const {
-    return this->path;
+bool InputFacade::getTraverse() const {
+    return this->traverse;
+}
+
+std::string InputFacade::getAlgorithm() const {
+    return this->algorithm;
+}
+
+std::string InputFacade::getOutput() const {
+    return this->output;
 }

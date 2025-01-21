@@ -1,17 +1,24 @@
-#include "../../tclap/CmdLine.h"
+#include "../../resources/tclap/CmdLine.h"
 
 #include <iostream>
 #include <string>
 
 class InputFacade {
-    std::string algorithm;
-    std::string checksums;
     std::string path;
+    std::string checksums;
+    bool traverse;
+    std::string algorithm;
+    std::string output;
+
 public:
     InputFacade(int argc, char** argv);
-    std::string getAlgorithm() const;
-    std::string getChecksums() const;
+
     std::string getPath() const;
+    std::string getChecksums() const;
+    bool getTraverse() const;
+    std::string getAlgorithm() const;
+    std::string getOutput() const;
+    
 private:
     std::string getValidatedArg(TCLAP::ValueArg<std::string>&) const;
 };
