@@ -31,6 +31,20 @@ RegularFile::RegularFile(const std::string& path) : File(path) {
     }
 }
 
+std::string RegularFile::getChecksum(const std::shared_ptr<ChecksumCalculator>& calc) const {
+    if (!calc) {
+        throw std::invalid_argument("RegularFile::getChecksum - nullptr arg passed");
+    }
+    if (this->checksum == "") {
+        std::ifstream file(this->getPath(), std::ios::binary);
+        if (!file) {
+            throw std::runtime_error("RegularFile::getChecksum - Error opening file");
+        }
+        this->checksum = calc->calculate(file);
+    }
+    return this->checksum;
+}
+
 Directory::Directory(const std::string& path) : File(path) {
     if (!std::filesystem::is_directory(path)) {
         throw std::invalid_argument("Directory::Directory - Not a directory");
