@@ -4,6 +4,7 @@
 #include <memory>
 #include <string>
 
+//NOTE: Intended to be built by the FileSystemBuilder
 class File {
     std::string path;
     size_t size = 0;
@@ -20,13 +21,11 @@ public:
 class RegularFile : public File {
 public:
     RegularFile(const std::string& path);
-    size_t getSize() const override;
 };
 
 class Directory : public File {
     std::vector<std::shared_ptr<File>> files;
 public:
     Directory(const std::string& path);
-    size_t getSize() const override;
     void addFile(std::shared_ptr<File>& file);
 };
