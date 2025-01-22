@@ -1,5 +1,7 @@
 #pragma once
 
+#include "ChecksumCalculator.hpp"
+
 #include <vector>
 #include <memory>
 #include <string>
@@ -14,13 +16,15 @@ public:
     virtual ~File() = default;
 
     void setSize(size_t size);
-    virtual size_t getSize() const;
+    size_t getSize() const;
     std::string getPath() const;
 };
 
 class RegularFile : public File {
+    mutable std::string checksum;
 public:
     RegularFile(const std::string& path);
+    std::string getChecksum(const std::shared_ptr<ChecksumCalculator>&) const;
 };
 
 class Directory : public File {

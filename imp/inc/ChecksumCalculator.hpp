@@ -11,4 +11,4 @@ class ChecksumCalculator {
 public:
     virtual std::string calculate(std::istream&) const = 0;
     virtual ~ChecksumCalculator() = default;
-};;
+};

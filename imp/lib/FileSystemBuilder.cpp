@@ -1,4 +1,5 @@
 #include "../inc/FileSystemBuilder.hpp"
+#include "../inc/CalculatorFactory.hpp"
 
 #include <filesystem>
 #include <memory>
@@ -28,7 +29,7 @@ static void checkSymlink(std::string& curPath) {
     }
 }
 
-static std::shared_ptr<File> buildCommon(const std::string& path, bool traverse) {
+static std::shared_ptr<File> buildCommon(const std::string& path, bool traverse, const std::shared_ptr<ChecksumCalculator>& calc) {
     std::string curPath = path;
 
     if (traverse) {
@@ -36,15 +37,19 @@ static std::shared_ptr<File> buildCommon(const std::string& path, bool traverse)
     }
 
     if (fs::is_regular_file(curPath)) {
-        std::shared_ptr<File> file = std::make_shared<RegularFile>(curPath);
+        std::shared_ptr<RegularFile> file = std::make_shared<RegularFile>(curPath);
         file->setSize(fs::file_size(curPath));
-        return std::make_shared<RegularFile>(curPath);
+        if (calc) {
+            //checksum is calculated and stored on first getChecksum() call due to lazy init implementation
+            file->getChecksum(calc);
+        }
+        return file;
     }
 
     if (fs::is_directory(curPath)) {
         std::shared_ptr<Directory> dir = std::make_shared<Directory>(curPath);
         for (const auto& entry : fs::directory_iterator(curPath)) {
-            std::shared_ptr<File> file = buildCommon(entry.path().string(), traverse);
+            std::shared_ptr<File> file = buildCommon(entry.path().string(), traverse, calc);
             if (!file) {
                 //we will store only regular files and directories
                 continue;
@@ -59,11 +64,21 @@ static std::shared_ptr<File> buildCommon(const std::string& path, bool traverse)
 }
 
 std::shared_ptr<File> IgnoreSymlinkFileSystemBuilder::build(const std::string& path) const {
-    return buildCommon(path, false);
+    std::shared_ptr<ChecksumCalculator> calculator = nullptr;
+    if (this->input.getBuildChecksums()) {
+        //user specified to calculate the checksums in the file building process
+        calculator = ChecksumCalculatorFactory::getCalculator(this->input.getAlgorithm());
+    }
+    return buildCommon(path, false, calculator);
 }
 
 //NOTE: this implementation will traverse UNIX symlinks only
 //Windows .lnk files(or any other files) won't be treated as symlinks
 std::shared_ptr<File> TraverseSymlinkFileSystemBuilder::build(const std::string& path) const {
-    return buildCommon(path, true);
+    std::shared_ptr<ChecksumCalculator> calculator = nullptr;
+    if (this->input.getBuildChecksums()) {
+        //user specified to calculate the checksums in the file building process
+        calculator = ChecksumCalculatorFactory::getCalculator(this->input.getAlgorithm());
+    }
+    return buildCommon(path, true, calculator);
 }

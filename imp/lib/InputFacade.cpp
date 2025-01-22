@@ -35,6 +35,7 @@ InputFacade::InputFacade(int argc, char** argv) {
     TCLAP::SwitchArg noTraverseArg("", "no-traverse", "Don't traverse symlinks", cmd, false);
     TCLAP::ValueArg<std::string> algorithmArg("a", "algorithm", "Checksum algorithm", false, "md5", "string", cmd);
     TCLAP::ValueArg<std::string> formatArg("f", "format", "Output format", false, "text", "string", cmd);
+    TCLAP::SwitchArg buildChecksumsArg("", "build-checksums", "Calculate checksums when building the files", cmd, false);
 
     try {
         cmd.parse(argc, argv);
@@ -48,6 +49,7 @@ InputFacade::InputFacade(int argc, char** argv) {
     this->checksums = getValidatedArg(checksumsArg);
     this->path = getValidatedArg(pathArg);
     this->traverse = !noTraverseArg.getValue();
+    this->buildChecksums = buildChecksumsArg.getValue();
 
     //validated later
     this->output = formatArg.getValue();
@@ -72,4 +74,8 @@ std::string InputFacade::getAlgorithm() const {
 
 std::string InputFacade::getOutput() const {
     return this->output;
+}
+
+bool InputFacade::getBuildChecksums() const {
+    return this->buildChecksums;
 }

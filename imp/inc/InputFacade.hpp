@@ -11,6 +11,7 @@ class InputFacade {
     bool traverse;
     std::string algorithm;
     std::string output;
+    bool buildChecksums;
 
 public:
     InputFacade(int argc, char** argv);
@@ -20,6 +21,7 @@ public:
     bool getTraverse() const;
     std::string getAlgorithm() const;
     std::string getOutput() const;
+    bool getBuildChecksums() const;
     
 private:
     std::string getValidatedArg(TCLAP::ValueArg<std::string>&) const;
