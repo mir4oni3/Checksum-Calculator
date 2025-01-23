@@ -38,5 +38,9 @@ std::string MD5Calculator::calculate(std::istream& is) const {
         hexResult << std::setw(2) << static_cast<int>(result[i]);
     }
 
+    //return original state of stream
+    is.clear();
+    is.seekg(0, std::ios::beg);
+    
     return hexResult.str();
 }
