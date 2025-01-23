@@ -38,11 +38,3 @@ std::shared_ptr<File> FileIterator::next() {
     //file is an already returned directory, skip it
     return next();
 }
-
-std::shared_ptr<File> RegularFileIterator::next() {
-    std::shared_ptr<File> file;
-    do {
-        file = FileIterator::next();
-    } while (file && !std::dynamic_pointer_cast<RegularFile>(file));
-    return file;
-}

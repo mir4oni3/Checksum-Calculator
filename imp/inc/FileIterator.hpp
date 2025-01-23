@@ -14,9 +14,3 @@ public:
     virtual std::shared_ptr<File> next();
     bool hasMore();
 };
-
-class RegularFileIterator : public FileIterator {
-public:
-    RegularFileIterator(const std::shared_ptr<File>&);
-    std::shared_ptr<File> next() override;
-};
