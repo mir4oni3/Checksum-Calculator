@@ -8,31 +8,30 @@
 #include <string>
 #include <iostream>
 
+namespace ParserConstants {
+    //filenames with \n are not allowed, hex letters need to be small
+    const std::string fileLineRegex = "^[a-f0-9]+ \\*(\\/[^\\/\n]*)+$";
+}
 
 class FileParser {
-protected:
-    std::shared_ptr<ChecksumCalculator> calculator;
 public:
-    FileParser(const std::shared_ptr<ChecksumCalculator>&);
     virtual ~FileParser() = default;
 
     //extract files and their checksums from a stream
-    static std::unordered_map<std::string, std::string> parseFiles(std::istream&);
+    virtual std::unordered_map<std::string, std::string> parseFiles(std::istream&) = 0;
     //write files and their checksums to a stream
-    virtual void exportFile(std::ostream&, const std::shared_ptr<File>&) const = 0;
-
-    std::shared_ptr<ChecksumCalculator> getCalculator() const;
-    void setCalculator(const std::shared_ptr<ChecksumCalculator>&);
+    virtual void exportFile(const std::shared_ptr<File>&, std::ostream&, const std::shared_ptr<ChecksumCalculator>&) const = 0;
 };
 
 class XMLParser : public FileParser {
 public:
-    XMLParser(const std::shared_ptr<ChecksumCalculator>&);
-    void exportFile(std::ostream&, const std::shared_ptr<File>&) const override;
+    std::unordered_map<std::string, std::string> parseFiles(std::istream&) override;
+    void exportFile(const std::shared_ptr<File>&, std::ostream&, const std::shared_ptr<ChecksumCalculator>&) const override;
 };
 
 class NormalTextParser : public FileParser {
+    std::pair<std::string, std::string> parseLine(const std::string& line) const;
 public:
-    NormalTextParser(const std::shared_ptr<ChecksumCalculator>&);
-    void exportFile(std::ostream&, const std::shared_ptr<File>&) const override;
+    std::unordered_map<std::string, std::string> parseFiles(std::istream&) override;
+    void exportFile(const std::shared_ptr<File>&, std::ostream&, const std::shared_ptr<ChecksumCalculator>&) const override;
 };
