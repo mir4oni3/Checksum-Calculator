@@ -58,3 +58,6 @@ void Directory::addFile(std::shared_ptr<File>& file) {
     this->files.push_back(file);
 }
 
+const std::vector<std::shared_ptr<File>>& Directory::getFiles() const {
+    return this->files;
+}

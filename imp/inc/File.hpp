@@ -31,5 +31,7 @@ class Directory : public File {
     std::vector<std::shared_ptr<File>> files;
 public:
     Directory(const std::string& path);
+
     void addFile(std::shared_ptr<File>& file);
+    const std::vector<std::shared_ptr<File>>& getFiles() const;
 };
