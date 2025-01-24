@@ -5,24 +5,21 @@
 
 class FileSystemBuilder {
 protected:
-    const InputFacade& input;
+    std::string algorithm;
 public:
-    FileSystemBuilder(const InputFacade& input);
     virtual ~FileSystemBuilder() = default;
 
     virtual std::shared_ptr<File> build(const std::string&) const = 0;
+    
+    void setAlgorithm(const std::string& algorithm);
 };
 
 class IgnoreSymlinkFileSystemBuilder : public FileSystemBuilder {
 public:
-    IgnoreSymlinkFileSystemBuilder(const InputFacade& input);
-
     std::shared_ptr<File> build(const std::string&) const override;
 };
 
 class TraverseSymlinkFileSystemBuilder : public FileSystemBuilder {
 public:
-    TraverseSymlinkFileSystemBuilder(const InputFacade& input);
-    
     std::shared_ptr<File> build(const std::string&) const override;
 };

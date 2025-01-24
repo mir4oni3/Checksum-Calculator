@@ -63,11 +63,17 @@ static std::shared_ptr<File> buildCommon(const std::string& path, bool traverse,
     return nullptr;
 }
 
+//setting the algorithm means that the checksums will be calculated during the file building process
+//default behavior is to build without calculating checksums
+void FileSystemBuilder::setAlgorithm(const std::string& algorithm) {
+    this->algorithm = algorithm;
+}
+
 std::shared_ptr<File> IgnoreSymlinkFileSystemBuilder::build(const std::string& path) const {
     std::shared_ptr<ChecksumCalculator> calculator = nullptr;
-    if (this->input.getBuildChecksums()) {
+    if (this->algorithm != "") {
         //user specified to calculate the checksums in the file building process
-        calculator = ChecksumCalculatorFactory::getCalculator(this->input.getAlgorithm());
+        calculator = ChecksumCalculatorFactory::getCalculator(this->algorithm);
     }
     return buildCommon(path, false, calculator);
 }
@@ -76,9 +82,9 @@ std::shared_ptr<File> IgnoreSymlinkFileSystemBuilder::build(const std::string& p
 //Windows .lnk files(or any other files) won't be treated as symlinks
 std::shared_ptr<File> TraverseSymlinkFileSystemBuilder::build(const std::string& path) const {
     std::shared_ptr<ChecksumCalculator> calculator = nullptr;
-    if (this->input.getBuildChecksums()) {
+    if (this->algorithm != "") {
         //user specified to calculate the checksums in the file building process
-        calculator = ChecksumCalculatorFactory::getCalculator(this->input.getAlgorithm());
+        calculator = ChecksumCalculatorFactory::getCalculator(this->algorithm);
     }
     return buildCommon(path, true, calculator);
 }
