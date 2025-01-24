@@ -3,7 +3,7 @@
 #include "../inc/XMLParser.hpp"
 
 std::shared_ptr<FileParser> FileParserFactory::getParser(const std::string& format) {
-    if (format == "normal") {
+    if (format == "text") {
         return std::make_shared<NormalTextParser>();
     }
     if (format == "xml") {
