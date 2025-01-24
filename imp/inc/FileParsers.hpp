@@ -8,30 +8,38 @@
 #include <string>
 #include <iostream>
 
-namespace ParserConstants {
+namespace RegexConstants {
     //filenames with \n are not allowed, hex letters need to be small
-    const std::string fileLineRegex = "^[a-f0-9]+ \\*(\\/[^\\/\n]*)+$";
+    const std::string hashRegex = "[a-f0-9]+";
+    const std::string filepathRegex = "(\\/[^\\/\n]*)+";
+
+    const std::string textFileLineRegex = "^" + hashRegex + " \\*" + filepathRegex + "$";
+
+    const std::string xmlOpeningTagRegex = "<([^<> ]+)>";//first group
+    const std::string xmlContentRegex = "([^<>]+)";//second group
+    const std::string xmlClosingTagRegex = "<\\/\\1>";//backreference to the first group
+    const std::string xmlOneLineElRegex = "^ *" + xmlOpeningTagRegex + xmlContentRegex + xmlClosingTagRegex + " *$";
 }
 
 class FileParser {
+    virtual void parseLine(const std::string&, std::unordered_map<std::string, std::string>&) const = 0;
 public:
     virtual ~FileParser() = default;
 
     //extract files and their checksums from a stream
-    virtual std::unordered_map<std::string, std::string> parseFiles(std::istream&) = 0;
+    virtual std::unordered_map<std::string, std::string> parseFiles(std::istream&);
     //write files and their checksums to a stream
     virtual void exportFile(const std::shared_ptr<File>&, std::ostream&, const std::shared_ptr<ChecksumCalculator>&) const = 0;
 };
 
 class XMLParser : public FileParser {
+    void parseLine(const std::string&, std::unordered_map<std::string, std::string>&) const override;
 public:
-    std::unordered_map<std::string, std::string> parseFiles(std::istream&) override;
     void exportFile(const std::shared_ptr<File>&, std::ostream&, const std::shared_ptr<ChecksumCalculator>&) const override;
 };
 
 class NormalTextParser : public FileParser {
-    std::pair<std::string, std::string> parseLine(const std::string& line) const;
+    void parseLine(const std::string&, std::unordered_map<std::string, std::string>&) const override;
 public:
-    std::unordered_map<std::string, std::string> parseFiles(std::istream&) override;
     void exportFile(const std::shared_ptr<File>&, std::ostream&, const std::shared_ptr<ChecksumCalculator>&) const override;
 };
