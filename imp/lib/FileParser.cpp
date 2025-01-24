@@ -1,4 +1,4 @@
-#include "../inc/FileParsers.hpp"
+#include "../inc/FileParser.hpp"
 #include "../inc/FileIterator.hpp"
 
 #include <sstream>
@@ -14,6 +14,10 @@ std::unordered_map<std::string, std::string> FileParser::parseFiles(std::istream
 
     while (std::getline(is, line)) {
         parseLine(line, files);
+    }
+
+    if (is.bad()) {
+        throw std::runtime_error("FileParser::parseFiles - Error reading from stream");
     }
 
     is.clear();

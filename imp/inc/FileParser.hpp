@@ -31,15 +31,3 @@ public:
     //write files and their checksums to a stream
     virtual void exportFile(const std::shared_ptr<File>&, std::ostream&, const std::shared_ptr<ChecksumCalculator>&) const = 0;
 };
-
-class XMLParser : public FileParser {
-    void parseLine(const std::string&, std::unordered_map<std::string, std::string>&) const override;
-public:
-    void exportFile(const std::shared_ptr<File>&, std::ostream&, const std::shared_ptr<ChecksumCalculator>&) const override;
-};
-
-class NormalTextParser : public FileParser {
-    void parseLine(const std::string&, std::unordered_map<std::string, std::string>&) const override;
-public:
-    void exportFile(const std::shared_ptr<File>&, std::ostream&, const std::shared_ptr<ChecksumCalculator>&) const override;
-};
