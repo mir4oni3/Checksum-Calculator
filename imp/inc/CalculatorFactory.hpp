@@ -1,7 +1,6 @@
 #pragma once
 
-#include "MD5Calculator.hpp"
-#include "SHA256Calculator.hpp"
+#include "ChecksumCalculator.hpp"
 
 #include <memory>
 
