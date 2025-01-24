@@ -10,7 +10,7 @@ class InputFacade {
     std::string checksums;
     bool traverse;
     std::string algorithm;
-    std::string output;
+    std::string format;
     bool buildChecksums;
 
 public:
@@ -20,7 +20,7 @@ public:
     std::string getChecksums() const;
     bool getTraverse() const;
     std::string getAlgorithm() const;
-    std::string getOutput() const;
+    std::string getFormat() const;
     bool getBuildChecksums() const;
     
 private:

@@ -52,7 +52,7 @@ InputFacade::InputFacade(int argc, char** argv) {
     this->buildChecksums = buildChecksumsArg.getValue();
 
     //validated later
-    this->output = formatArg.getValue();
+    this->format = formatArg.getValue();
     this->algorithm = algorithmArg.getValue();
 }
 
@@ -72,8 +72,8 @@ std::string InputFacade::getAlgorithm() const {
     return this->algorithm;
 }
 
-std::string InputFacade::getOutput() const {
-    return this->output;
+std::string InputFacade::getFormat() const {
+    return this->format;
 }
 
 bool InputFacade::getBuildChecksums() const {
