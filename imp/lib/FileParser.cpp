@@ -22,6 +22,7 @@ std::unordered_map<std::string, std::string> FileParser::parseFiles(std::istream
 
     is.clear();
     is.seekg(0, std::ios::beg);
-
+    is.clear();
+    
     return files;
 }
