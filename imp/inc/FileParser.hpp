@@ -13,12 +13,12 @@ namespace RegexConstants {
     const std::string hashRegex = "[a-f0-9]+";
     const std::string filepathRegex = "(\\/[^\\/\n]*)+";
 
-    const std::string textFileLineRegex = "^" + hashRegex + " \\*" + filepathRegex + "$";
+    const std::string textFileLineRegex = hashRegex + " \\*" + filepathRegex;
 
-    const std::string xmlOpeningTagRegex = "<([^<> ]+)>";//first group
+    const std::string xmlOpeningTagRegex = " *<([^<> ]+)> *";//first group
     const std::string xmlContentRegex = "([^<>]+)";//second group
     const std::string xmlClosingTagRegex = "<\\/\\1>";//backreference to the first group
-    const std::string xmlOneLineElRegex = "^ *" + xmlOpeningTagRegex + xmlContentRegex + xmlClosingTagRegex + " *$";
+    const std::string xmlOneLineElRegex = " *" + xmlOpeningTagRegex + xmlContentRegex + xmlClosingTagRegex + " *";
 }
 
 class FileParser {

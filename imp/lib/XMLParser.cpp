@@ -13,8 +13,8 @@ void XMLParser::parseLine(const std::string& line, std::unordered_map<std::strin
 
     static const std::regex lineRegex(RegexConstants::xmlOneLineElRegex);
     static std::pair<std::string, std::string> toAdd;
-
     std::smatch match;
+    
     if (std::regex_match(line, match, lineRegex)) {
         //current line is of the form <tag>content</tag>
         std::string tag = match[1];
@@ -25,6 +25,12 @@ void XMLParser::parseLine(const std::string& line, std::unordered_map<std::strin
         if (tag == "checksum") {
             toAdd.second = content;
         }
+    }
+
+    static const std::regex openingTagRegex(RegexConstants::xmlOpeningTagRegex);
+    if (std::regex_match(line, match, openingTagRegex) && match[1] == "item") {
+        //current line is an opening tag for a new item, clear current item
+        toAdd = {};
     }
 
     if (toAdd.first != "" && toAdd.second != "") {
