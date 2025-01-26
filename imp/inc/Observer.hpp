@@ -4,5 +4,5 @@
 
 class Observer {
 public:
-    virtual void update(const std::string& message, const std::string& value) = 0;
+    virtual void update(const std::string& message, const std::string& value) const = 0;
 };

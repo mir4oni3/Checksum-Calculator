@@ -1,5 +1,6 @@
 #include "../inc/VisitorWriter.hpp"
 #include "../inc/FileIterator.hpp"
+#include "../inc/ObserverMessages.hpp"
 
 VisitorWriter::VisitorWriter(std::ostream& os) : os(os) {}
 
@@ -19,11 +20,11 @@ void VisitorWriter::exportFile(const std::shared_ptr<File>& file) const {
 }
 
 void VisitorWriter::visitRegularFile(const RegularFile& file) const {
-    notifyObservers("new_regfile", file.getPath());
+    notifyObservers(ObserverMessages::newRegularFile, file.getPath());
 }
 
 void VisitorWriter::visitDirectory(const Directory& dir) const {
-    notifyObservers("new_dir", dir.getPath());
+    notifyObservers(ObserverMessages::newDirectory, dir.getPath());
 }
 
 void VisitorWriter::setupExport() const {
