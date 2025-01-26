@@ -5,6 +5,8 @@
 XMLStreamWriter::XMLStreamWriter(std::ostream& os, const std::shared_ptr<ChecksumCalculator>& calc) : HashStreamWriter(os, calc) {}
 
 void XMLStreamWriter::visitRegularFile(const RegularFile& file) const {
+        VisitorWriter::visitRegularFile(file); //notify observers
+
         os << "    <item>\n";
         os << "        <mode>binary</mode>\n";
         os << "        <checksum>" << file.getChecksum(calc) << "</checksum>\n";

@@ -18,8 +18,12 @@ void VisitorWriter::exportFile(const std::shared_ptr<File>& file) const {
     finalizeExport();
 }
 
+void VisitorWriter::visitRegularFile(const RegularFile& file) const {
+    notifyObservers("new_regfile", file.getPath());
+}
+
 void VisitorWriter::visitDirectory(const Directory& dir) const {
-    //do nothing by default
+    notifyObservers("new_dir", dir.getPath());
 }
 
 void VisitorWriter::setupExport() const {

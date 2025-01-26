@@ -1,11 +1,12 @@
 #pragma once
 
 #include "File.hpp"
+#include "Observable.hpp"
 
 #include <memory>
 #include <ostream>
 
-class VisitorWriter {
+class VisitorWriter : public Observable {
 protected:
     std::ostream& os;
 
@@ -16,7 +17,7 @@ public:
     //write file(and subfiles recursively) and its checksum to a stream
     void exportFile(const std::shared_ptr<File>&) const;
 
-    virtual void visitRegularFile(const RegularFile&) const = 0;
+    virtual void visitRegularFile(const RegularFile&) const;
     virtual void visitDirectory(const Directory&) const;
 
 protected:
