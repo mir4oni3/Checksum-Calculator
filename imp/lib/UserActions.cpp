@@ -6,7 +6,7 @@
 
 #include <memory>
 
-void UserActions::start(const InputFacade& input) const {
+void UserActions::start(const InputFacade& input) {
     std::shared_ptr<FileSystemBuilder> builder = FileSystemBuilderFactory::getBuilder(input.getTraverse());
     if (input.getBuildChecksums()) {
         builder->setAlgorithm(input.getAlgorithm());
@@ -31,14 +31,14 @@ void UserActions::start(const InputFacade& input) const {
     compareChecksums(target, calc, checksums);
 }
 
-void UserActions::viewChecksums(const std::shared_ptr<File>& target, const std::shared_ptr<ChecksumCalculator>& calc, const std::shared_ptr<FileParser>& parser) const {
+void UserActions::viewChecksums(const std::shared_ptr<File>& target, const std::shared_ptr<ChecksumCalculator>& calc, const std::shared_ptr<FileParser>& parser) {
     if (!parser) {	
         throw std::invalid_argument("UserActions::viewChecksums - nullptr parser passed");
     }
     parser->exportFile(target, std::cout, calc);
 }
 
-void UserActions::compareChecksums(const std::shared_ptr<File>& target, const std::shared_ptr<ChecksumCalculator>& calc, std::unordered_map<std::string, std::string>& checksums) const {
+void UserActions::compareChecksums(const std::shared_ptr<File>& target, const std::shared_ptr<ChecksumCalculator>& calc, std::unordered_map<std::string, std::string>& checksums) {
     if (!target || !calc) {
         throw std::invalid_argument("UserActions::compareChecksums - nullptr arg(s) passed");
     }
