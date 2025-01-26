@@ -3,13 +3,13 @@
 
 VisitorWriter::VisitorWriter(std::ostream& os) : os(os) {}
 
-void VisitorWriter::export(const std::shared_ptr<File>& file) const {
+void VisitorWriter::exportFile(const std::shared_ptr<File>& file) const {
     if (!file) {
         throw std::invalid_argument("VisitorWriter::export - invalid file ptr");
     }
 
     FileIterator it(file);
-    
+
     setupExport();
     while (it.hasMore()) {
         std::shared_ptr<File> current = it.next();

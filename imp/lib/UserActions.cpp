@@ -35,7 +35,7 @@ void UserActions::viewChecksums(const std::shared_ptr<File>& target, const std::
     if (!writer) {	
         throw std::invalid_argument("UserActions::viewChecksums - nullptr parser passed");
     }
-    writer->export(target);
+    writer->exportFile(target);
 }
 
 void UserActions::compareChecksums(const std::shared_ptr<File>& target, const std::shared_ptr<ChecksumCalculator>& calc, std::unordered_map<std::string, std::string>& checksums) {

@@ -1,4 +1,5 @@
 #include "../inc/File.hpp"
+#include "../inc/VisitorWriter.hpp"
 
 #include <filesystem>
 

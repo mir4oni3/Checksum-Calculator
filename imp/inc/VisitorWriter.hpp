@@ -5,7 +5,6 @@
 #include <memory>
 #include <ostream>
 
-
 class VisitorWriter {
 protected:
     std::ostream& os;
@@ -15,7 +14,7 @@ public:
     virtual ~VisitorWriter() = default;
 
     //write file(and subfiles recursively) and its checksum to a stream
-    void export(const std::shared_ptr<File>&) const;
+    void exportFile(const std::shared_ptr<File>&) const;
 
     virtual void visitRegularFile(const RegularFile&) const = 0;
     virtual void visitDirectory(const Directory&) const;

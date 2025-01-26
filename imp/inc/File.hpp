@@ -1,11 +1,12 @@
 #pragma once
 
 #include "ChecksumCalculator.hpp"
-#include "VisitorWriter.hpp"
 
 #include <vector>
 #include <memory>
 #include <string>
+
+class VisitorWriter;
 
 //NOTE: Intended to be built by the FileSystemBuilder
 class File {
