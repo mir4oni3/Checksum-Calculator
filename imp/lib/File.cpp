@@ -45,6 +45,10 @@ std::string RegularFile::getChecksum(const std::shared_ptr<ChecksumCalculator>& 
     return this->checksum;
 }
 
+void RegularFile::accept(const VisitorWriter& writer) const {
+    writer.visitRegularFile(*this);
+}
+
 Directory::Directory(const std::string& path) : File(path) {
     if (!std::filesystem::is_directory(path)) {
         throw std::invalid_argument("Directory::Directory - Not a directory");
@@ -60,4 +64,8 @@ void Directory::addFile(std::shared_ptr<File>& file) {
 
 const std::vector<std::shared_ptr<File>>& Directory::getFiles() const {
     return this->files;
+}
+
+void Directory::accept(const VisitorWriter& writer) const {
+    writer.visitDirectory(*this);
 }
