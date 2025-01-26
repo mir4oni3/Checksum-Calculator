@@ -1,6 +1,6 @@
-#include "../inc/VisitorWriter.hpp"
-#include "../inc/FileIterator.hpp"
-#include "../inc/ObserverMessages.hpp"
+#include "Visitors/VisitorWriter.hpp"
+#include "Files/FileIterator.hpp"
+#include "Observers/ObserverMessages.hpp"
 
 VisitorWriter::VisitorWriter(std::ostream& os) : os(os) {}
 

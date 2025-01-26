@@ -1,4 +1,4 @@
-#include "../inc/XMLStreamWriter.hpp"
+#include "Visitors/XMLStreamWriter.hpp"
 
 #include <regex>
 

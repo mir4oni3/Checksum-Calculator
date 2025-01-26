@@ -1,4 +1,4 @@
-#include "../inc/FileIterator.hpp"
+#include "Files/FileIterator.hpp"
 
 FileIterator::FileIterator(const std::shared_ptr<File>& root) {
     if (!root) {

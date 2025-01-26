@@ -1,8 +1,8 @@
-#include "../inc/UserActions.hpp"
-#include "../inc/CalculatorFactory.hpp"
-#include "../inc/HashStreamWriterFactory.hpp"
-#include "../inc/FileSystemBuilderFactory.hpp"
-#include "../inc/FileIterator.hpp"
+#include "IO/UserActions.hpp"
+#include "Factories/CalculatorFactory.hpp"
+#include "Factories/HashStreamWriterFactory.hpp"
+#include "Factories/FileSystemBuilderFactory.hpp"
+#include "Files/FileIterator.hpp"
 
 #include <memory>
 

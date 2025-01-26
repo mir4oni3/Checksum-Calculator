@@ -1,6 +1,6 @@
-#include "../inc/CalculatorFactory.hpp"
-#include "../inc/MD5Calculator.hpp"
-#include "../inc/SHA256Calculator.hpp"
+#include "Factories/CalculatorFactory.hpp"
+#include "Calculators/MD5Calculator.hpp"
+#include "Calculators/SHA256Calculator.hpp"
 
 std::shared_ptr<ChecksumCalculator> ChecksumCalculatorFactory::getCalculator(const std::string& algorithm) {
     if (algorithm == "md5") {

@@ -1,5 +1,5 @@
-#include "../inc/ProgressReporter.hpp"
-#include "../inc/ObserverMessages.hpp"
+#include "Observers/ProgressReporter.hpp"
+#include "Observers/ObserverMessages.hpp"
 
 #include <ostream>
 

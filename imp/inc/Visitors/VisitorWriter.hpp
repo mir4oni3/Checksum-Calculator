@@ -1,7 +1,7 @@
 #pragma once
 
-#include "File.hpp"
-#include "Observable.hpp"
+#include "Files/File.hpp"
+#include "Observers/Observable.hpp"
 
 #include <memory>
 #include <ostream>

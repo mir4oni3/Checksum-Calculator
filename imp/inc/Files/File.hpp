@@ -1,6 +1,6 @@
 #pragma once
 
-#include "ChecksumCalculator.hpp"
+#include "Calculators/ChecksumCalculator.hpp"
 
 #include <vector>
 #include <memory>

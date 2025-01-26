@@ -1,5 +1,5 @@
-#include "../inc/File.hpp"
-#include "../inc/VisitorWriter.hpp"
+#include "Files/File.hpp"
+#include "Visitors/VisitorWriter.hpp"
 
 #include <filesystem>
 

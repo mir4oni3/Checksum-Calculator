@@ -1,4 +1,4 @@
-#include "../inc/NormalTextStreamWriter.hpp"
+#include "Visitors/NormalTextStreamWriter.hpp"
 
 #include <regex>
 #include <sstream>

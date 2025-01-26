@@ -1,5 +1,5 @@
-#include "../inc/MD5Calculator.hpp"
-#include "../../resources/librhash/md5.h"
+#include "Calculators/MD5Calculator.hpp"
+#include "librhash/md5.h"
 
 #include <sstream>
 #include <iomanip>

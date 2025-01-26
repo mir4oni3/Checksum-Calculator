@@ -1,9 +1,9 @@
 #pragma once
 
 #include "InputFacade.hpp"
-#include "ChecksumCalculator.hpp"
-#include "File.hpp"
-#include "HashStreamWriter.hpp"
+#include "Calculators/ChecksumCalculator.hpp"
+#include "Files/File.hpp"
+#include "Visitors/HashStreamWriter.hpp"
 
 #include <memory>
 

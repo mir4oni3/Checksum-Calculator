@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../../resources/tclap/CmdLine.h"
+#include "tclap/CmdLine.h"
 
 #include <iostream>
 #include <string>

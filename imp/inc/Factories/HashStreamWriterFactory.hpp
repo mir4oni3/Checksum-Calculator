@@ -1,6 +1,6 @@
 #pragma once
 
-#include "HashStreamWriter.hpp"
+#include "Visitors/HashStreamWriter.hpp"
 
 class HashStreamWriterFactory {
 public:

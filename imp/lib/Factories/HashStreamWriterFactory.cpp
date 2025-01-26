@@ -1,6 +1,6 @@
-#include "../inc/HashStreamWriterFactory.hpp"
-#include "../inc/NormalTextStreamWriter.hpp"
-#include "../inc/XMLStreamWriter.hpp"
+#include "Factories/HashStreamWriterFactory.hpp"
+#include "Visitors/NormalTextStreamWriter.hpp"
+#include "Visitors/XMLStreamWriter.hpp"
 
 std::shared_ptr<HashStreamWriter> HashStreamWriterFactory::getWriter(const std::string& format,  std::ostream& os, const std::shared_ptr<ChecksumCalculator>& calc) {
     if (format == "text") {

@@ -1,4 +1,4 @@
-#include "../inc/FileSystemBuilderFactory.hpp"
+#include "Factories/FileSystemBuilderFactory.hpp"
 
 std::shared_ptr<FileSystemBuilder> FileSystemBuilderFactory::getBuilder(bool traverse) {
     if (traverse) {

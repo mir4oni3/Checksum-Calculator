@@ -1,5 +1,5 @@
-#include "../inc/SHA256Calculator.hpp"
-#include "../../resources/librhash/sha256.h"
+#include "Calculators/SHA256Calculator.hpp"
+#include "librhash/sha256.h"
 
 #include <sstream>
 #include <iomanip>

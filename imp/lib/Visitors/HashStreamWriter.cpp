@@ -1,4 +1,4 @@
-#include "../inc/HashStreamWriter.hpp"
+#include "Visitors/HashStreamWriter.hpp"
 
 HashStreamWriter::HashStreamWriter(std::ostream& os, const std::shared_ptr<ChecksumCalculator>& calc) : VisitorWriter(os), calc(calc) {}
 
