@@ -9,10 +9,13 @@ void VisitorWriter::export(const std::shared_ptr<File>& file) const {
     }
 
     FileIterator it(file);
+    
+    setupExport();
     while (it.hasMore()) {
         std::shared_ptr<File> current = it.next();
         current->accept(*this);
     }
+    finalizeExport();
 }
 
 void VisitorWriter::visitDirectory(const Directory& dir) const {

@@ -1,6 +1,6 @@
 #include "../inc/UserActions.hpp"
 #include "../inc/CalculatorFactory.hpp"
-#include "../inc/FileParserFactory.hpp"
+#include "../inc/HashStreamWriterFactory.hpp"
 #include "../inc/FileSystemBuilderFactory.hpp"
 #include "../inc/FileIterator.hpp"
 
@@ -14,11 +14,11 @@ void UserActions::start(const InputFacade& input) {
 
     std::shared_ptr<File> target = builder->build(input.getPath());
     std::shared_ptr<ChecksumCalculator> calc = ChecksumCalculatorFactory::getCalculator(input.getAlgorithm());
-    std::shared_ptr<FileParser> parser = FileParserFactory::getParser(input.getFormat());
+    std::shared_ptr<HashStreamWriter> writer = HashStreamWriterFactory::getWriter(input.getFormat(), std::cout, calc);
     
 
     if (input.getChecksums() == "") {
-        viewChecksums(target, calc, parser);
+        viewChecksums(target, writer);
         return;
     }
 
@@ -27,15 +27,15 @@ void UserActions::start(const InputFacade& input) {
     if (!checksumFile) {
         throw std::runtime_error("FileActions::viewChecksums - Error opening file");
     }
-    std::unordered_map<std::string, std::string> checksums = parser->parseFiles(checksumFile);
+    std::unordered_map<std::string, std::string> checksums = writer->parseFiles(checksumFile);
     compareChecksums(target, calc, checksums);
 }
 
-void UserActions::viewChecksums(const std::shared_ptr<File>& target, const std::shared_ptr<ChecksumCalculator>& calc, const std::shared_ptr<FileParser>& parser) {
-    if (!parser) {	
+void UserActions::viewChecksums(const std::shared_ptr<File>& target, const std::shared_ptr<HashStreamWriter>& writer) {
+    if (!writer) {	
         throw std::invalid_argument("UserActions::viewChecksums - nullptr parser passed");
     }
-    parser->exportFile(target, std::cout, calc);
+    writer->export(target);
 }
 
 void UserActions::compareChecksums(const std::shared_ptr<File>& target, const std::shared_ptr<ChecksumCalculator>& calc, std::unordered_map<std::string, std::string>& checksums) {
