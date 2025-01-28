@@ -1057,8 +1057,6 @@ RHASH_API size_t rhash_ctrl(rhash context, int cmd, size_t size, void* data)
 		rhash_set_openssl_enabled_hash_mask(ids_array_to_hash_bitmask(size, (unsigned*)data));
 		break;
 
-	case RMSG_GET_LIBRHASH_VERSION:
-		return RHASH_XVERSION;
 	default:
 		return RHASH_ERROR; /* unknown message */
 	}

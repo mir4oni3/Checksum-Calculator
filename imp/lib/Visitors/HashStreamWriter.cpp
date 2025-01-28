@@ -1,6 +1,10 @@
 #include "Visitors/HashStreamWriter.hpp"
 
-HashStreamWriter::HashStreamWriter(std::ostream& os, const std::shared_ptr<ChecksumCalculator>& calc) : VisitorWriter(os), calc(calc) {}
+HashStreamWriter::HashStreamWriter(std::ostream& os, const std::shared_ptr<ChecksumCalculator>& calc) : VisitorWriter(os), calc(calc) {
+    if (!calc) {
+        throw std::invalid_argument("HashStreamWriter::HashStreamWriter - Invalid calculator passed");
+    }
+}
 
 std::unordered_map<std::string, std::string> HashStreamWriter::parseFiles(std::istream& is) const {
     if (!is) {

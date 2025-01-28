@@ -3,6 +3,7 @@
 #include "Factories/HashStreamWriterFactory.hpp"
 #include "Factories/FileSystemBuilderFactory.hpp"
 #include "Files/FileIterator.hpp"
+#include "Observers/ProgressReporter.hpp"
 
 #include <memory>
 
@@ -14,8 +15,10 @@ void UserActions::start(const InputFacade& input) {
 
     std::shared_ptr<File> target = builder->build(input.getPath());
     std::shared_ptr<ChecksumCalculator> calc = ChecksumCalculatorFactory::getCalculator(input.getAlgorithm());
+    std::shared_ptr<ProgressReporter> reporter = std::make_shared<ProgressReporter>(std::cout);
+   
     std::shared_ptr<HashStreamWriter> writer = HashStreamWriterFactory::getWriter(input.getFormat(), std::cout, calc);
-    
+    writer->addObserver(reporter);
 
     if (input.getChecksums() == "") {
         viewChecksums(target, writer);

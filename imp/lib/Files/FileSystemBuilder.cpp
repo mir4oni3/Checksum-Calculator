@@ -48,6 +48,8 @@ static std::shared_ptr<File> buildCommon(const std::string& path, bool traverse,
 
     if (fs::is_directory(curPath)) {
         std::shared_ptr<Directory> dir = std::make_shared<Directory>(curPath);
+        dir->setSize(0);
+
         for (const auto& entry : fs::directory_iterator(curPath)) {
             std::shared_ptr<File> file = buildCommon(entry.path().string(), traverse, calc);
             if (!file) {
@@ -57,6 +59,7 @@ static std::shared_ptr<File> buildCommon(const std::string& path, bool traverse,
             dir->addFile(file);
             dir->setSize(dir->getSize() + file->getSize());
         }
+        
         return dir;
     }
 

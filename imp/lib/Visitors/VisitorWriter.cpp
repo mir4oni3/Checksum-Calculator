@@ -2,7 +2,11 @@
 #include "Files/FileIterator.hpp"
 #include "Observers/ObserverMessages.hpp"
 
-VisitorWriter::VisitorWriter(std::ostream& os) : os(os) {}
+VisitorWriter::VisitorWriter(std::ostream& os) : os(os) {
+    if (!os) {
+        throw std::invalid_argument("VisitorWriter::VisitorWriter - invalid ostream");
+    }
+}
 
 void VisitorWriter::exportFile(const std::shared_ptr<File>& file) const {
     if (!file) {
