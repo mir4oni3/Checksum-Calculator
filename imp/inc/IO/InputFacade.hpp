@@ -12,6 +12,7 @@ class InputFacade {
     std::string algorithm;
     std::string format;
     bool buildChecksums;
+    std::string saveTo;
 
 public:
     InputFacade(int argc, char** argv);
@@ -22,6 +23,7 @@ public:
     std::string getAlgorithm() const;
     std::string getFormat() const;
     bool getBuildChecksums() const;
+    std::string getSaveTo() const;
     
 private:
     std::string getValidatedArg(TCLAP::ValueArg<std::string>&) const;

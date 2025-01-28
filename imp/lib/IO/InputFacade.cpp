@@ -36,6 +36,7 @@ InputFacade::InputFacade(int argc, char** argv) {
     TCLAP::ValueArg<std::string> algorithmArg("a", "algorithm", "Checksum algorithm", false, "md5", "string", cmd);
     TCLAP::ValueArg<std::string> formatArg("f", "format", "Output format", false, "text", "string", cmd);
     TCLAP::SwitchArg buildChecksumsArg("", "build-checksums", "Calculate checksums when building the files", cmd, false);
+    TCLAP::ValueArg<std::string> saveToArg("s", "save-to", "Save checksums to file", false, "", "string", cmd);
 
     try {
         cmd.parse(argc, argv);
@@ -54,6 +55,7 @@ InputFacade::InputFacade(int argc, char** argv) {
     //validated later
     this->format = formatArg.getValue();
     this->algorithm = algorithmArg.getValue();
+    this->saveTo = saveToArg.getValue();
 }
 
 std::string InputFacade::getPath() const {
@@ -78,4 +80,8 @@ std::string InputFacade::getFormat() const {
 
 bool InputFacade::getBuildChecksums() const {
     return this->buildChecksums;
+}
+
+std::string InputFacade::getSaveTo() const {
+    return this->saveTo;
 }
