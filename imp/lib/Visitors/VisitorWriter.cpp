@@ -16,8 +16,8 @@ void VisitorWriter::exportFile(const std::shared_ptr<File>& file) const {
     FileIterator it(file);
 
     setupExport();
-    while (it.hasMore()) {
-        std::shared_ptr<File> current = it.next();
+    std::shared_ptr<File> current;
+    while (current = it.next()) {
         current->accept(*this);
     }
     finalizeExport();

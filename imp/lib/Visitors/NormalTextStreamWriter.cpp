@@ -7,7 +7,7 @@ NormalTextStreamWriter::NormalTextStreamWriter(std::ostream& os, const std::shar
 
 void NormalTextStreamWriter::visitRegularFile(const RegularFile& file) const {
     VisitorWriter::visitRegularFile(file); //notify observers
-    os << file.getChecksum(calc) << " *" << file.getPath() << "\n";
+    tempStream << file.getChecksum(calc) << " *" << file.getPath() << "\n";
 }
 
 void NormalTextStreamWriter::parseLine(const std::string& line, std::unordered_map<std::string, std::string>& files) const {

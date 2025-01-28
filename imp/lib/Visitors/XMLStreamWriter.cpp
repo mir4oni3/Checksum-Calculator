@@ -7,19 +7,20 @@ XMLStreamWriter::XMLStreamWriter(std::ostream& os, const std::shared_ptr<Checksu
 void XMLStreamWriter::visitRegularFile(const RegularFile& file) const {
         VisitorWriter::visitRegularFile(file); //notify observers
 
-        os << "    <item>\n";
-        os << "        <mode>binary</mode>\n";
-        os << "        <checksum>" << file.getChecksum(calc) << "</checksum>\n";
-        os << "        <path>" << file.getPath() << "</path>\n";
-        os << "        <size>" << file.getSize() << "</size>\n";
-        os << "    </item>\n";
+        tempStream << "    <item>\n";
+        tempStream << "        <mode>binary</mode>\n";
+        tempStream << "        <checksum>" << file.getChecksum(calc) << "</checksum>\n";
+        tempStream << "        <path>" << file.getPath() << "</path>\n";
+        tempStream << "        <size>" << file.getSize() << "</size>\n";
+        tempStream << "    </item>\n";
 }
 
 void XMLStreamWriter::setupExport() const {
-        os << "<checksums>\n";
+        tempStream << "<checksums>\n";
 }
 
 void XMLStreamWriter::finalizeExport() const {
+        HashStreamWriter::finalizeExport();
         os << "</checksums>\n";
 }
 

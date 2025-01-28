@@ -47,8 +47,9 @@ void UserActions::compareChecksums(const std::shared_ptr<File>& target, const st
     }
     
     FileIterator it(target);
-    while (it.hasMore()) {
-        std::shared_ptr<RegularFile> regFile = std::dynamic_pointer_cast<RegularFile>(it.next());
+
+    while (auto current = it.next()) {
+        std::shared_ptr<RegularFile> regFile = std::dynamic_pointer_cast<RegularFile>(current);
         if (!regFile) {
             continue;
         }

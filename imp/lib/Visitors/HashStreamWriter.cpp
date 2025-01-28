@@ -28,3 +28,8 @@ std::unordered_map<std::string, std::string> HashStreamWriter::parseFiles(std::i
     
     return files;
 }
+
+void HashStreamWriter::finalizeExport() const {
+    os << tempStream.str();
+    tempStream.str("");
+}

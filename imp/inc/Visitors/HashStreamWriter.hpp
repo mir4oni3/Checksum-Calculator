@@ -2,6 +2,8 @@
 
 #include "VisitorWriter.hpp"
 
+#include <sstream>
+
 namespace RegexConstants {
     //filenames with \n are not allowed, hex letters need to be small
     const std::string hashRegex = "[a-f0-9]+";
@@ -20,7 +22,7 @@ class HashStreamWriter : public VisitorWriter {
 
 protected:
     const std::shared_ptr<ChecksumCalculator> calc;
-
+    mutable std::ostringstream tempStream;
 public:
     HashStreamWriter(std::ostream& os, const std::shared_ptr<ChecksumCalculator>& calc);
 
@@ -28,4 +30,6 @@ public:
 
     //extract files and their checksums from a stream
     virtual std::unordered_map<std::string, std::string> parseFiles(std::istream& is) const;
+
+    virtual void finalizeExport() const override;
 };
