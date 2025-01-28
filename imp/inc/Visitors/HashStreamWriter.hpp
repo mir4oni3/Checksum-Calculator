@@ -5,8 +5,7 @@
 #include <sstream>
 
 namespace RegexConstants {
-    //filenames with \n are not allowed, hex letters need to be small
-    const std::string hashRegex = "[a-f0-9]+";
+    const std::string hashRegex = "[a-fA-F0-9]+";
     const std::string filepathRegex = "([^\\/]*\\/)*[^\\/]+";
 
     const std::string textFileLineRegex = hashRegex + " \\*" + filepathRegex;

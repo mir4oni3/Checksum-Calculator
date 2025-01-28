@@ -13,7 +13,7 @@ void Observable::removeObserver(const std::shared_ptr<Observer>& observer) {
     }
 }
 
-void Observable::notifyObservers(const std::string& message, const std::string& value) const {
+void Observable::notifyObservers(ObserverMessage message, const std::string& value) const {
     for (auto& observer : observers) {
         observer->update(message, value);
     }

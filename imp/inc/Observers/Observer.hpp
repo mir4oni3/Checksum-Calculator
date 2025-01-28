@@ -1,8 +1,10 @@
 #pragma once
 
+#include "ObserverMessage.hpp"
+
 #include <string>
 
 class Observer {
 public:
-    virtual void update(const std::string& message, const std::string& value) const = 0;
+    virtual void update(ObserverMessage message, const std::string& value) const = 0;
 };

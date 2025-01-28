@@ -1,6 +1,6 @@
 #include "Visitors/VisitorWriter.hpp"
 #include "Files/FileIterator.hpp"
-#include "Observers/ObserverMessages.hpp"
+#include "Observers/ObserverMessage.hpp"
 
 VisitorWriter::VisitorWriter(std::ostream& os) : os(os) {
     if (!os) {
@@ -13,6 +13,8 @@ void VisitorWriter::exportFile(const std::shared_ptr<File>& file) const {
         throw std::invalid_argument("VisitorWriter::export - invalid file ptr");
     }
 
+    notifyObservers(ObserverMessage::rootFileSize, std::to_string(file->getSize()));
+    
     FileIterator it(file);
 
     setupExport();
@@ -24,11 +26,11 @@ void VisitorWriter::exportFile(const std::shared_ptr<File>& file) const {
 }
 
 void VisitorWriter::visitRegularFile(const RegularFile& file) const {
-    notifyObservers(ObserverMessages::newRegularFile, file.getPath());
+    notifyObservers(ObserverMessage::newRegularFile, file.getPath());
 }
 
 void VisitorWriter::visitDirectory(const Directory& dir) const {
-    notifyObservers(ObserverMessages::newDirectory, dir.getPath());
+    notifyObservers(ObserverMessage::newDirectory, dir.getPath());
 }
 
 void VisitorWriter::setupExport() const {

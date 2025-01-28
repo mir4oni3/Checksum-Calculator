@@ -1,5 +1,5 @@
 #include "Observers/ProgressReporter.hpp"
-#include "Observers/ObserverMessages.hpp"
+#include "Observers/ObserverMessage.hpp"
 
 #include <ostream>
 
@@ -9,8 +9,12 @@ ProgressReporter::ProgressReporter(std::ostream& reportTo) : os(reportTo) {
     }
 }
 
-void ProgressReporter::update(const std::string& message, const std::string& value) const {
-    if (message == ObserverMessages::newRegularFile) {
+void ProgressReporter::update(ObserverMessage message, const std::string& value) const {
+    if (message == ObserverMessage::rootFileSize) {
+        totalSize = std::stoull(value);
+        isTotalSizeSet = true;
+    }
+    if (message == ObserverMessage::newRegularFile) {
         os << "Processing " << value << "...\n";
     }
 }
