@@ -24,9 +24,12 @@ protected:
     mutable std::ostringstream tempStream;
 public:
     HashStreamWriter(std::ostream& os, const std::shared_ptr<ChecksumCalculator>& calc);
+    virtual ~HashStreamWriter() = default;
 
     virtual void visitRegularFile(const RegularFile&) const override = 0;
 
+    virtual void addObserver(const std::shared_ptr<Observer>& observer) override;
+    
     //extract files and their checksums from a stream
     virtual std::unordered_map<std::string, std::string> parseFiles(std::istream& is) const;
 

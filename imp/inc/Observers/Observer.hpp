@@ -6,5 +6,5 @@
 
 class Observer {
 public:
-    virtual void update(ObserverMessage message, const std::string& value) const = 0;
+    virtual void update(ObserverMessage message, const std::string& value) = 0;
 };

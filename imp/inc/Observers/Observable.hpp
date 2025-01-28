@@ -11,7 +11,9 @@ class Observable {
 protected:
     std::vector<std::shared_ptr<Observer>> observers;
 public:
-    void addObserver(const std::shared_ptr<Observer>& observer);
-    void removeObserver(const std::shared_ptr<Observer>& observer);
-    void notifyObservers(ObserverMessage message, const std::string& value) const;
+    ~Observable() = default;
+    
+    virtual void addObserver(const std::shared_ptr<Observer>& observer);
+    virtual void removeObserver(const std::shared_ptr<Observer>& observer);
+    virtual void notifyObservers(ObserverMessage message, const std::string& value) const;
 };

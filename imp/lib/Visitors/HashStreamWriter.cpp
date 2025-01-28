@@ -4,6 +4,9 @@ HashStreamWriter::HashStreamWriter(std::ostream& os, const std::shared_ptr<Check
     if (!calc) {
         throw std::invalid_argument("HashStreamWriter::HashStreamWriter - Invalid calculator passed");
     }
+
+    // Adding two newline characters to separate sections in the output stream
+    tempStream << "\n\n";
 }
 
 std::unordered_map<std::string, std::string> HashStreamWriter::parseFiles(std::istream& is) const {
@@ -32,4 +35,10 @@ std::unordered_map<std::string, std::string> HashStreamWriter::parseFiles(std::i
 void HashStreamWriter::finalizeExport() const {
     os << tempStream.str();
     tempStream.str("");
+}
+
+//the Observer should receive messages from calculator as well
+void HashStreamWriter::addObserver(const std::shared_ptr<Observer>& observer) {
+    VisitorWriter::addObserver(observer);
+    calc->addObserver(observer);
 }

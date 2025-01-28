@@ -5,5 +5,6 @@
 enum class ObserverMessage {
     newRegularFile,
     newDirectory,
-    rootFileSize
+    rootFileSize,
+    progress
 };

@@ -16,6 +16,7 @@ std::string SHA256Calculator::calculate(std::istream& is) const {
     char buffer[CalcConstants::chunkSize];
     while (is.read(buffer, CalcConstants::chunkSize)) {
         rhash_sha256_update(&context, reinterpret_cast<const unsigned char*>(buffer), CalcConstants::chunkSize);
+        notifyObservers(ObserverMessage::progress, std::to_string(CalcConstants::chunkSize));
     }
 
     if (is.bad()) {
@@ -26,6 +27,7 @@ std::string SHA256Calculator::calculate(std::istream& is) const {
     size_t bytesRead = is.gcount();
     if (bytesRead > 0) {
         rhash_sha256_update(&context, reinterpret_cast<const unsigned char*>(buffer), bytesRead);
+        notifyObservers(ObserverMessage::progress, std::to_string(bytesRead));
     }
 
     unsigned char result[sha256_hash_size];
