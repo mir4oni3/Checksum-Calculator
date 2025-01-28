@@ -4,8 +4,6 @@ HashStreamWriter::HashStreamWriter(std::ostream& os, const std::shared_ptr<Check
     if (!calc) {
         throw std::invalid_argument("HashStreamWriter::HashStreamWriter - Invalid calculator passed");
     }
-
-    // Adding two newline characters to separate sections in the output stream
     tempStream << "\n\n";
 }
 
