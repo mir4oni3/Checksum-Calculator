@@ -19,7 +19,7 @@ void NormalTextStreamWriter::parseLine(const std::string& line, std::unordered_m
 
     if (!std::regex_match(line, lineRegex)) {
         throw std::runtime_error(
-            "FileParser::parseFiles - Invalid file line format for: "
+            "NormalTextStreamWriter::parseFiles - Invalid file line format for: "
             + line +
             "\n File format should be in the plain text format "
             "used in the *sum family of applications in Linux"
