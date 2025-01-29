@@ -28,8 +28,3 @@ void CompareWriter::finalizeExport() const {
         tempStream << path << ": REMOVED\n";
     }
 }
-
-void CompareWriter::addObserver(const std::shared_ptr<Observer>& observer) {
-    VisitorWriter::addObserver(observer);
-    calc->addObserver(observer);
-}

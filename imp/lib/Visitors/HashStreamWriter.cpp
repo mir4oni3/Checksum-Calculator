@@ -10,6 +10,7 @@ HashStreamWriter::HashStreamWriter(std::ostream& os, const std::shared_ptr<Check
 void HashStreamWriter::finalizeExport() const {
     os << tempStream.str();
     tempStream.str("");
+    notifyObservers(ObserverMessage::allFilesHandled, "true");
 }
 
 //the Observer should receive messages from calculator as well
