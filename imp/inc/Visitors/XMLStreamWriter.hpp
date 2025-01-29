@@ -8,6 +8,4 @@ public:
 
     virtual void setupExport() const override;
     virtual void finalizeExport() const override;
-
-    void parseLine(const std::string& line, std::unordered_map<std::string, std::string>& files) const override;
 };
