@@ -2,7 +2,6 @@
 #include "Observers/ObserverMessage.hpp"
 
 #include <ostream>
-#include <thread>
 
 ProgressReporter::ProgressReporter(std::ostream& reportTo) : os(reportTo) {
     if (!os) {
@@ -21,10 +20,16 @@ void ProgressReporter::update(ObserverMessage message, const std::string& value)
             visualizeProgressBar();
             break;
         case ObserverMessage::newRegularFile:
-            os << "\r" << "\033[F" << "\033[2K" << "\r"; //setup cursor
+            os << "\r" << "\033[F" << "\033[F" << "\033[2K" << "\r"; //setup cursor
             os << "Processing " << value << "...\n";
             startTime = timerStarted ? startTime : std::chrono::system_clock::now();
             timerStarted = true;
+            break;
+        case ObserverMessage::allFilesHandled:
+            totalBytes = 0;
+            totalBytesKnown = false;
+            currentBytesRead = 0;
+            timerStarted = false;
             break;
     }
 }
