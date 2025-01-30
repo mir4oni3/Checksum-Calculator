@@ -21,23 +21,15 @@ void UserActions::start(const InputFacade& input) {
     std::shared_ptr<File> target = builder->build(input.getPath());
     std::shared_ptr<ChecksumCalculator> calc = ChecksumCalculatorFactory::getCalculator(input.getAlgorithm());
     std::shared_ptr<ProgressReporter> reporter = std::make_shared<ProgressReporter>(std::cout);
-    std::shared_ptr<HashStreamWriter> writer = HashStreamWriterFactory::getWriter(input.getFormat(), std::cout, calc);
-    std::shared_ptr<FileHashParser> parser = ParserFactory::getParser(input.getFormat());
 
     //perform actions
     if (input.getChecksums() == "") { 
+        std::shared_ptr<HashStreamWriter> writer = HashStreamWriterFactory::getWriter(input.getFormat(), std::cout, calc);
         writer->addObserver(reporter);
         viewChecksums(target, writer);
     }
     else {
-        //parse checksum file to hashmap
-        std::ifstream checksumIfs(input.getChecksums());
-        if (!checksumIfs) {
-            throw std::runtime_error("FileActions::start - Error opening checksum file");
-        }
-        std::unordered_map<std::string, std::string> checksums = parser->parseFiles(checksumIfs);
-
-        compareChecksums(target, calc, checksums, reporter);
+        compareChecksums(target, calc, input.getChecksums(), input.getFormat(), reporter);
     }
 
     //save file if user requested
@@ -58,10 +50,20 @@ void UserActions::viewChecksums(const std::shared_ptr<File>& target, const std::
 }
 
 void UserActions::compareChecksums(const std::shared_ptr<File>& target, const std::shared_ptr<ChecksumCalculator>& calc,
-                                   std::unordered_map<std::string, std::string>& checksums, const std::shared_ptr<ProgressReporter>& reporter) {
+                                   const std::string& checksumFile, const std::string& format, const std::shared_ptr<ProgressReporter>& reporter) {
     if (!target || !calc || !reporter) {
         throw std::invalid_argument("UserActions::compareChecksums - nullptr arg(s) passed");
     }
+
+    std::shared_ptr<FileHashParser> parser = ParserFactory::getParser(format);
+
+    //parse checksum file to hashmap
+    std::ifstream checksumIfs(checksumFile);
+    if (!checksumIfs) {
+        throw std::runtime_error("FileActions::start - Error opening checksum file");
+    }
+    std::unordered_map<std::string, std::string> checksums = parser->parseFiles(checksumIfs);
+
     std::shared_ptr<CompareWriter> compareWriter = std::make_shared<CompareWriter>(std::cout, calc, checksums);
     compareWriter->addObserver(reporter);
     compareWriter->exportFile(target);
