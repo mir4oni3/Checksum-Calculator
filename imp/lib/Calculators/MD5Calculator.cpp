@@ -9,12 +9,15 @@ std::string MD5Calculator::calculate(std::istream& is) const {
         throw std::invalid_argument("MD5Calculator::calculate - Invalid input stream state");
     }
 
+    wait();
+
     md5_ctx context;
     rhash_md5_init(&context);
 
     //read data in chunks
     char buffer[CalcConstants::chunkSize];
     while (is.read(buffer, CalcConstants::chunkSize)) {
+        wait();
         rhash_md5_update(&context, reinterpret_cast<const unsigned char*>(buffer), CalcConstants::chunkSize);
         notifyObservers(ObserverMessage::progress, std::to_string(CalcConstants::chunkSize));
     }
@@ -30,6 +33,8 @@ std::string MD5Calculator::calculate(std::istream& is) const {
         notifyObservers(ObserverMessage::progress, std::to_string(bytesRead));
     }
 
+    wait();
+    
     unsigned char result[md5_hash_size];
     rhash_md5_final(&context, result);
 

@@ -9,12 +9,15 @@ std::string SHA256Calculator::calculate(std::istream& is) const {
         throw std::invalid_argument("SHA256Calculator::calculate - Invalid input stream state");
     }
 
+    wait();
+
     sha256_ctx context;
     rhash_sha256_init(&context);
 
     //read data in chunks
     char buffer[CalcConstants::chunkSize];
     while (is.read(buffer, CalcConstants::chunkSize)) {
+        wait();
         rhash_sha256_update(&context, reinterpret_cast<const unsigned char*>(buffer), CalcConstants::chunkSize);
         notifyObservers(ObserverMessage::progress, std::to_string(CalcConstants::chunkSize));
     }
@@ -29,6 +32,8 @@ std::string SHA256Calculator::calculate(std::istream& is) const {
         rhash_sha256_update(&context, reinterpret_cast<const unsigned char*>(buffer), bytesRead);
         notifyObservers(ObserverMessage::progress, std::to_string(bytesRead));
     }
+
+    wait();
 
     unsigned char result[sha256_hash_size];
     rhash_sha256_final(&context, result);

@@ -7,5 +7,7 @@ enum class ObserverMessage {
     newDirectory,
     rootFileSize,
     progress,
-    allFilesHandled
+    allFilesHandled,
+    pauseCalculation,
+    resumeCalculation
 };

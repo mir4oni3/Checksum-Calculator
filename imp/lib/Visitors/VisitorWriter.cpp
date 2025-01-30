@@ -14,13 +14,12 @@ void VisitorWriter::exportFile(const std::shared_ptr<File>& file) const {
     }
 
     notifyObservers(ObserverMessage::rootFileSize, std::to_string(file->getSize()));
-    
+
     FileIterator it(file);
 
     setupExport();
-    std::shared_ptr<File> current;
-    while (current = it.next()) {
-        current->accept(*this);
+    while (this->currentFile = it.next()) {
+        currentFile->accept(*this);
     }
     finalizeExport();
 }

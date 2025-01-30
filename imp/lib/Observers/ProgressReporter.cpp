@@ -11,6 +11,9 @@ ProgressReporter::ProgressReporter(std::ostream& reportTo) : os(reportTo) {
 
 void ProgressReporter::update(ObserverMessage message, const std::string& value) {
     switch(message) {
+        case ObserverMessage::resumeCalculation:
+            os << "Processing " << value << "...\n";
+            break;
         case ObserverMessage::rootFileSize:
             totalBytes = std::stoull(value);
             totalBytesKnown = true;
@@ -34,6 +37,7 @@ void ProgressReporter::update(ObserverMessage message, const std::string& value)
     }
 }
 
+#include <thread>
 void ProgressReporter::visualizeProgressBar() const {
     if (!totalBytesKnown) {
         throw std::runtime_error("ProgressReporter::visualizeProgressBar - Total size unknown");
@@ -60,6 +64,6 @@ void ProgressReporter::visualizeProgressBar() const {
     size_t remaining = elapsed.count() / currentProgress - elapsed.count(); //expected remaining time
 
     os << "] " << currentBytesRead << "B / " << totalBytes << "B";
-    os <<  ", " << percentage << "% ready, remaining time: " << remaining << "s";
+    os <<  ", " << percentage << "% ready, remaining time: " << remaining << "s ";
     os.flush();
 }

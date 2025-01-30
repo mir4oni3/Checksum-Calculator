@@ -9,7 +9,7 @@
 class VisitorWriter : public Observable {
 protected:
     std::ostream& os;
-
+    mutable std::shared_ptr<File> currentFile;
 public:
     VisitorWriter(std::ostream& os);
     virtual ~VisitorWriter() = default;
