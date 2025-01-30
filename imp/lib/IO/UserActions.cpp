@@ -25,7 +25,11 @@ void UserActions::start(const InputFacade& input) {
     //perform actions
     if (input.getChecksums() == "") { 
         std::shared_ptr<HashStreamWriter> writer = HashStreamWriterFactory::getWriter(input.getFormat(), std::cout, calc);
-        writer->addObserver(reporter);
+        if (!input.getBuildChecksums()) {
+            //observe progress only in the no-build mode, since in build mode
+            //the checksums are already calculated during the builder->build function.
+            writer->addObserver(reporter);
+        }
         viewChecksums(target, writer);
     }
     else {

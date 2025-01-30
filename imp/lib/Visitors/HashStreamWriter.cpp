@@ -12,6 +12,8 @@ HashStreamWriter::HashStreamWriter(std::ostream& os, const std::shared_ptr<Check
 }
 
 void HashStreamWriter::setupExport() const {
+    std::cout << "\033[2J\033[1;1H"; //clear screen
+    
     //run pauseListener on another thread
     std::thread(&HashStreamWriter::pauseListener, this).detach();
 }
