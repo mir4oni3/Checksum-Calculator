@@ -20,22 +20,32 @@ public:
 
 TEST_CASE("TestChecksumCalculatorUpdate", "[ChecksumCalculator]") {
     ChecksumCalculatorStub calc;
-    REQUIRE_FALSE(calc.getPause());
+    REQUIRE(calc.getPause() == false);
+
     REQUIRE_NOTHROW(calc.update(ObserverMessage::resumeCalculation, ""));
-    REQUIRE_FALSE(calc.getPause());
+    REQUIRE(calc.getPause() == false);
+
     REQUIRE_NOTHROW(calc.update(ObserverMessage::pauseCalculation, ""));
     REQUIRE(calc.getPause());
+
     REQUIRE_NOTHROW(calc.update(ObserverMessage::resumeCalculation, ""));
-    REQUIRE_FALSE(calc.getPause());
+    REQUIRE(calc.getPause() == false);
 }
 
 TEST_CASE("TestChecksumCalculatorWait", "[ChecksumCalculator]") {
     ChecksumCalculatorStub calc;
 
+    //wait() should exit instantly when pause is false
+    REQUIRE(calc.getPause() == false);
+    auto asyncWait = std::async(std::launch::async, [&calc]() { calc.wait(); });
+    if (asyncWait.wait_for(std::chrono::milliseconds(10)) != std::future_status::ready) {
+        FAIL("Wait is taking too long when it shouldn't be waiting");
+    }
+
     //set pause to true and run wait()
     calc.update(ObserverMessage::pauseCalculation, "");
     REQUIRE(calc.getPause());
-    auto asyncWait = std::async(std::launch::async, [&calc]() { calc.wait(); });
+    asyncWait = std::async(std::launch::async, [&calc]() { calc.wait(); });
 
     //ensure wait() is sleeping
     std::this_thread::sleep_for(std::chrono::milliseconds(10));
