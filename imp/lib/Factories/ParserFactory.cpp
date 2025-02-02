@@ -2,13 +2,26 @@
 #include "Parsers/NormalTextFileParser.hpp"
 #include "Parsers/XMLTextFileParser.hpp"
 
-std::shared_ptr<FileHashParser> ParserFactory::getParser(const std::string& format) {
-    if (format == "text") {
-        return std::make_shared<NormalTextFileParser>();
+#include <regex>
+
+std::shared_ptr<FileHashParser> ParserFactory::getParser(std::istream& stream) {
+    //format is determined by stream content
+    std::string firstLine;
+    while (firstLine == "") {
+        std::getline(stream, firstLine);
     }
-    if (format == "xml") {
+    
+    //first line begins with xml opening tag
+    if (std::regex_match(firstLine, std::regex(RegexConstants::xmlOpeningTagRegex + ".*"))) {
         return std::make_shared<XMLTextFileParser>();
     }
-    throw std::invalid_argument("FileParserFactory::getParser - Unsupported format");
+
+    //first line is a text file line
+    if (std::regex_match(firstLine, std::regex(RegexConstants::textFileLineRegex))) {
+        return std::make_shared<NormalTextFileParser>();
+    }
+
+    //unknown format
+    throw std::invalid_argument("ParserFactory::getParser - Unsupported format");
     return nullptr;
 }

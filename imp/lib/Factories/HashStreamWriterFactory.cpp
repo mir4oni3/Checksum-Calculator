@@ -9,6 +9,6 @@ std::shared_ptr<HashStreamWriter> HashStreamWriterFactory::getWriter(const std::
     if (format == "xml") {
         return std::make_shared<XMLStreamWriter>(os, calc);
     }
-    throw std::invalid_argument("FileParserFactory::getParser - Unsupported format");
+    throw std::invalid_argument("HashStreamWriterFactory::getWriter - Unsupported format");
     return nullptr;
 }

@@ -59,13 +59,12 @@ void UserActions::compareChecksums(const std::shared_ptr<File>& target, const st
         throw std::invalid_argument("UserActions::compareChecksums - nullptr arg(s) passed");
     }
 
-    std::shared_ptr<FileHashParser> parser = ParserFactory::getParser(format);
-
     //parse checksum file to hashmap
     std::ifstream checksumIfs(checksumFile);
     if (!checksumIfs) {
         throw std::runtime_error("FileActions::start - Error opening checksum file");
     }
+    std::shared_ptr<FileHashParser> parser = ParserFactory::getParser(checksumIfs);
     std::unordered_map<std::string, std::string> checksums = parser->parseFiles(checksumIfs);
 
     std::shared_ptr<CompareWriter> compareWriter = std::make_shared<CompareWriter>(std::cout, calc, checksums);
