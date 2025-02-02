@@ -25,6 +25,7 @@ public:
 };
 
 class RegularFile : public File {
+protected:
     mutable std::string checksum;
 public:
     RegularFile(const std::string& path);
