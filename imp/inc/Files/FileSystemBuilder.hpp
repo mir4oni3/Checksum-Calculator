@@ -6,12 +6,14 @@
 class FileSystemBuilder {
 protected:
     std::string algorithm;
+    bool saveFullPath = false;
 public:
     virtual ~FileSystemBuilder() = default;
 
     virtual std::shared_ptr<File> build(const std::string&) const = 0;
     
     void setAlgorithm(const std::string& algorithm);
+    void saveFullPaths(bool save);
 };
 
 class IgnoreSymlinkFileSystemBuilder : public FileSystemBuilder {

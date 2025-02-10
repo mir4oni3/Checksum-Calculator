@@ -5,6 +5,7 @@
 #include <memory>
 #include <iostream>
 #include <unordered_set>
+#include <set>
 
 namespace fs = std::filesystem;
 
@@ -29,6 +30,14 @@ static void checkSymlink(std::string& curPath) {
     }
 }
 
+static std::set<std::string> getSortedSubFiles(const std::string& path) {
+    std::set<std::string> files;
+    for (const auto& entry : fs::directory_iterator(path)) {
+        files.insert(entry.path().string());
+    }
+    return files;
+}
+
 static std::shared_ptr<File> buildCommon(const std::string& path, bool traverse, const std::shared_ptr<ChecksumCalculator>& calc) {
     std::string curPath = path;
 
@@ -50,8 +59,9 @@ static std::shared_ptr<File> buildCommon(const std::string& path, bool traverse,
         std::shared_ptr<Directory> dir = std::make_shared<Directory>(curPath);
         dir->setSize(0);
 
-        for (const auto& entry : fs::directory_iterator(curPath)) {
-            std::shared_ptr<File> file = buildCommon(entry.path().string(), traverse, calc);
+        std::set<std::string> subfiles = getSortedSubFiles(curPath);
+        for (const std::string& entry : subfiles) {
+            std::shared_ptr<File> file = buildCommon(entry, traverse, calc);
             if (!file) {
                 //we will store only regular files and directories
                 continue;
@@ -72,22 +82,46 @@ void FileSystemBuilder::setAlgorithm(const std::string& algorithm) {
     this->algorithm = algorithm;
 }
 
+void FileSystemBuilder::saveFullPaths(bool save) {
+    this->saveFullPath = save;
+}
+
 std::shared_ptr<File> IgnoreSymlinkFileSystemBuilder::build(const std::string& path) const {
+    if (!fs::exists(path)) {
+        throw std::invalid_argument("TraverseSymlinkFileSystemBuilder::build - Path does not exist");
+    }
+
     std::shared_ptr<ChecksumCalculator> calculator = nullptr;
     if (this->algorithm != "") {
         //user specified to calculate the checksums in the file building process
         calculator = ChecksumCalculatorFactory::getCalculator(this->algorithm);
     }
-    return buildCommon(path, false, calculator);
+
+    std::string actualPath = path;
+    if (this->saveFullPath) {
+        actualPath = fs::absolute(path).string();
+    }
+
+    return buildCommon(actualPath, false, calculator);
 }
 
 //NOTE: this implementation will traverse UNIX symlinks only
 //Windows .lnk files(or any other files) won't be treated as symlinks
 std::shared_ptr<File> TraverseSymlinkFileSystemBuilder::build(const std::string& path) const {
+    if (!fs::exists(path)) {
+        throw std::invalid_argument("TraverseSymlinkFileSystemBuilder::build - Path does not exist");
+    }
+
     std::shared_ptr<ChecksumCalculator> calculator = nullptr;
     if (this->algorithm != "") {
         //user specified to calculate the checksums in the file building process
         calculator = ChecksumCalculatorFactory::getCalculator(this->algorithm);
     }
-    return buildCommon(path, true, calculator);
+
+    std::string actualPath = path;
+    if (this->saveFullPath) {
+        actualPath = fs::absolute(path).string();
+    }
+
+    return buildCommon(actualPath, true, calculator);
 }

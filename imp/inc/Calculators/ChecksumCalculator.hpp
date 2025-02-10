@@ -6,7 +6,7 @@
 #include <functional>
 
 namespace CalcConstants {
-    const size_t chunkSize = 10000;// read 10 000 bytes at a time
+    const size_t chunkSize = 10000; // read 10 000 bytes at a time
     const size_t waitTime = 100; // wait 100 ms before checking if calculation is unpaused
 }
 
