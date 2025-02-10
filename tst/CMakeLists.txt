@@ -11,6 +11,7 @@ file(GLOB_RECURSE TEST_SOURCES ${CMAKE_CURRENT_SOURCE_DIR}/../tst/Test*.cpp)
 
 add_executable(runTests ${TEST_SOURCES})
 
+target_include_directories(ChecksumsLibrary PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 target_link_libraries(runTests PRIVATE Catch2::Catch2WithMain ChecksumsLibrary)
 
 include(CTest)
