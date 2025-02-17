@@ -4,7 +4,7 @@
 
 #include <regex>
 
-std::shared_ptr<FileHashParser> ParserFactory::getParser(std::istream& stream) {
+std::unique_ptr<FileHashParser> ParserFactory::getParser(std::istream& stream) {
     //format is determined by stream content
     std::string firstLine;
     while (firstLine == "") {
@@ -13,12 +13,12 @@ std::shared_ptr<FileHashParser> ParserFactory::getParser(std::istream& stream) {
     
     //first line begins with xml opening tag
     if (std::regex_match(firstLine, std::regex(RegexConstants::xmlOpeningTagRegex + ".*"))) {
-        return std::make_shared<XMLTextFileParser>();
+        return std::make_unique<XMLTextFileParser>();
     }
 
     //first line is a text file line
     if (std::regex_match(firstLine, std::regex(RegexConstants::textFileLineRegex))) {
-        return std::make_shared<NormalTextFileParser>();
+        return std::make_unique<NormalTextFileParser>();
     }
 
     //unknown format

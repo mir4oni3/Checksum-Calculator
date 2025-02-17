@@ -2,7 +2,7 @@
 
 class XMLStreamWriter : public HashStreamWriter {
 public:
-    XMLStreamWriter(std::ostream& os, const std::shared_ptr<ChecksumCalculator>& calc);
+    XMLStreamWriter(std::ostream& os, ChecksumCalculator& calc);
     
     void visitRegularFile(const RegularFile& file) const override;
 

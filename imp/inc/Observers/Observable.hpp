@@ -9,11 +9,13 @@
 
 class Observable {
 protected:
-    std::vector<std::shared_ptr<Observer>> observers;
+    //store raw pointers, since references are not reassignable
+    //note that we cannot store unique_ptrs, since we don't own the observers
+    std::vector<Observer*> observers;
 public:
     ~Observable() = default;
     
-    virtual void addObserver(const std::shared_ptr<Observer>& observer);
-    virtual void removeObserver(const std::shared_ptr<Observer>& observer);
+    virtual void addObserver(Observer& observer);
+    virtual void removeObserver(const Observer& observer);
     virtual void notifyObservers(ObserverMessage message, const std::string& value) const;
 };

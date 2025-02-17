@@ -8,18 +8,16 @@ VisitorWriter::VisitorWriter(std::ostream& os) : os(os) {
     }
 }
 
-void VisitorWriter::exportFile(const std::shared_ptr<File>& file) const {
-    if (!file) {
-        throw std::invalid_argument("VisitorWriter::export - invalid file ptr");
-    }
-
-    notifyObservers(ObserverMessage::rootFileSize, std::to_string(file->getSize()));
+void VisitorWriter::exportFile(File& file) const {
+    notifyObservers(ObserverMessage::rootFileSize, std::to_string(file.getSize()));
 
     FileIterator it(file);
 
     setupExport();
-    while (this->currentFile = it.next()) {
-        currentFile->accept(*this);
+    while (it.hasNext()) {
+        const File& next = it.next();
+        this->currentFilePath = next.getPath();
+        next.accept(*this);
     }
     finalizeExport();
 }

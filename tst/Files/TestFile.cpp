@@ -46,12 +46,9 @@ TEST_CASE("TestRegularFileConstructor", "[RegularFile]") {
 
 TEST_CASE("TestRegularFileGetChecksum", "[RegularFile]") {
     RegularFileStub file(__FILE__);
-    std::shared_ptr<MD5Calculator> calc = std::make_shared<MD5Calculator>();
+    MD5Calculator calc;
     std::string checksum;
     std::ifstream fileStream(__FILE__, std::ios::binary);
-
-    //nullptr arg
-    REQUIRE_THROWS_AS(file.getChecksum(nullptr), std::invalid_argument);
 
     //checksum is already set, no new calculations
     file.setChecksum("test");
@@ -61,7 +58,7 @@ TEST_CASE("TestRegularFileGetChecksum", "[RegularFile]") {
     //checksum is not set, calculate
     file.setChecksum("");
     REQUIRE_NOTHROW(checksum = file.getChecksum(calc));
-    REQUIRE(checksum == calc->calculate(fileStream));
+    REQUIRE(checksum == calc.calculate(fileStream));
 }
 
 TEST_CASE("TestDirectoryConstructor", "[Directory]") {
@@ -74,17 +71,17 @@ TEST_CASE("TestDirectoryConstructor", "[Directory]") {
 
 TEST_CASE("TestDirectoryAddGetFiles", "[Directory]") {
     Directory dir(".");
-    std::shared_ptr<File> file;
+    std::unique_ptr<File> file;
     
     //nullptr arg
     file = nullptr;
-    REQUIRE_THROWS_AS(dir.addFile(file), std::invalid_argument);
+    REQUIRE_THROWS_AS(dir.addFile(std::move(file)), std::invalid_argument);
 
-    file = std::make_shared<RegularFile>(__FILE__);
+    file = std::make_unique<RegularFile>(__FILE__);
 
-    REQUIRE_NOTHROW(dir.addFile(file));
-    std::vector<std::shared_ptr<File>> files;
-    REQUIRE_NOTHROW(files = dir.getFiles());
+    REQUIRE_NOTHROW(dir.addFile(std::move(file)));
+    REQUIRE_NOTHROW(dir.getFiles());
+    const std::vector<std::unique_ptr<File>>& files = dir.getFiles();
     REQUIRE(files.size() == 1);
-    REQUIRE(files[0] == file);
+    REQUIRE(files[0]->getPath() == __FILE__);
 }

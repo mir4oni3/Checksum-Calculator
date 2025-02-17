@@ -1,6 +1,6 @@
 #include "Visitors/CompareWriter.hpp"
 
-CompareWriter::CompareWriter(std::ostream& os, const std::shared_ptr<ChecksumCalculator>& calc, std::unordered_map<std::string, std::string>& checksums) : HashStreamWriter(os, calc), checksums(checksums) {}
+CompareWriter::CompareWriter(std::ostream& os, ChecksumCalculator& calc, std::unordered_map<std::string, std::string>& checksums) : HashStreamWriter(os, calc), checksums(checksums) {}
 
 void CompareWriter::visitRegularFile(const RegularFile& regFile) const {
     VisitorWriter::visitRegularFile(regFile); //notify observers

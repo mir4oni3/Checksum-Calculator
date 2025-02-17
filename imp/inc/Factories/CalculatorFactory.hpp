@@ -6,5 +6,5 @@
 
 class ChecksumCalculatorFactory {
 public:
-    static std::shared_ptr<ChecksumCalculator> getCalculator(const std::string& algorithm);
+    static std::unique_ptr<ChecksumCalculator> getCalculator(const std::string& algorithm);
 };

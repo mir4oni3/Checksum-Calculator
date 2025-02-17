@@ -12,7 +12,6 @@
 class UserActions {
 public:
     static void start(const InputFacade& input);
-    static void viewChecksums(const std::shared_ptr<File>& target, const std::shared_ptr<HashStreamWriter>& writer);
-    static void compareChecksums(const std::shared_ptr<File>& target, const std::shared_ptr<ChecksumCalculator>& calc,
-                                 const std::string& checksumFile, const std::string& format, const std::shared_ptr<ProgressReporter>& reporter);
+    static void compareChecksums(File& target, ChecksumCalculator& calc,
+                                 const std::string& checksumFile, const std::string& format, ProgressReporter& reporter);
 };

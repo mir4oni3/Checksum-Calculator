@@ -32,16 +32,13 @@ RegularFile::RegularFile(const std::string& path) : File(path) {
     }
 }
 
-std::string RegularFile::getChecksum(const std::shared_ptr<ChecksumCalculator>& calc) const {
-    if (!calc) {
-        throw std::invalid_argument("RegularFile::getChecksum - nullptr arg passed");
-    }
+std::string RegularFile::getChecksum(const ChecksumCalculator& calc) const {
     if (this->checksum == "") {
         std::ifstream file(this->getPath(), std::ios::binary);
         if (!file) {
             throw std::runtime_error("RegularFile::getChecksum - Error opening file");
         }
-        this->checksum = calc->calculate(file);
+        this->checksum = calc.calculate(file);
     }
     return this->checksum;
 }
@@ -56,14 +53,14 @@ Directory::Directory(const std::string& path) : File(path) {
     }
 }
 
-void Directory::addFile(std::shared_ptr<File>& file) {
+void Directory::addFile(std::unique_ptr<File>&& file) {
     if (!file) {
-        throw std::invalid_argument("Directory::addFile - Invalid file");
+        throw std::invalid_argument("Directory::addFile - Null file");
     }
-    this->files.push_back(file);
+    this->files.push_back(std::move(file));
 }
 
-const std::vector<std::shared_ptr<File>>& Directory::getFiles() const {
+const std::vector<std::unique_ptr<File>>& Directory::getFiles() const {
     return this->files;
 }
 

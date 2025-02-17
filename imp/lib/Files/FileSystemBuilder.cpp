@@ -38,7 +38,7 @@ static std::set<std::string> getSortedSubFiles(const std::string& path) {
     return files;
 }
 
-static std::shared_ptr<File> buildCommon(const std::string& path, bool traverse, const std::shared_ptr<ChecksumCalculator>& calc) {
+static std::unique_ptr<File> buildCommon(const std::string& path, bool traverse, const std::unique_ptr<ChecksumCalculator>& calc) {
     std::string curPath = path;
 
     if (traverse) {
@@ -46,31 +46,30 @@ static std::shared_ptr<File> buildCommon(const std::string& path, bool traverse,
     }
 
     if (fs::is_regular_file(curPath)) {
-        std::shared_ptr<RegularFile> file = std::make_shared<RegularFile>(curPath);
+        std::unique_ptr<RegularFile> file = std::make_unique<RegularFile>(curPath);
         file->setSize(fs::file_size(curPath));
         if (calc) {
             //checksum is calculated and stored on first getChecksum() call due to lazy init implementation
-            file->getChecksum(calc);
+            file->getChecksum(*calc);
         }
-        return file;
+        return std::move(file);
     }
 
     if (fs::is_directory(curPath)) {
-        std::shared_ptr<Directory> dir = std::make_shared<Directory>(curPath);
+        std::unique_ptr<Directory> dir = std::make_unique<Directory>(curPath);
         dir->setSize(0);
 
         std::set<std::string> subfiles = getSortedSubFiles(curPath);
         for (const std::string& entry : subfiles) {
-            std::shared_ptr<File> file = buildCommon(entry, traverse, calc);
+            std::unique_ptr<File> file = buildCommon(entry, traverse, calc);
             if (!file) {
                 //we will store only regular files and directories
                 continue;
             }
-            dir->addFile(file);
             dir->setSize(dir->getSize() + file->getSize());
+            dir->addFile(std::move(file));
         }
-        
-        return dir;
+        return std::move(dir);
     }
 
     return nullptr;
@@ -86,12 +85,12 @@ void FileSystemBuilder::saveFullPaths(bool save) {
     this->saveFullPath = save;
 }
 
-std::shared_ptr<File> IgnoreSymlinkFileSystemBuilder::build(const std::string& path) const {
+std::unique_ptr<File> IgnoreSymlinkFileSystemBuilder::build(const std::string& path) const {
     if (!fs::exists(path)) {
         throw std::invalid_argument("TraverseSymlinkFileSystemBuilder::build - Path does not exist");
     }
 
-    std::shared_ptr<ChecksumCalculator> calculator = nullptr;
+    std::unique_ptr<ChecksumCalculator> calculator = nullptr;
     if (this->algorithm != "") {
         //user specified to calculate the checksums in the file building process
         calculator = ChecksumCalculatorFactory::getCalculator(this->algorithm);
@@ -107,12 +106,12 @@ std::shared_ptr<File> IgnoreSymlinkFileSystemBuilder::build(const std::string& p
 
 //NOTE: this implementation will traverse UNIX symlinks only
 //Windows .lnk files(or any other files) won't be treated as symlinks
-std::shared_ptr<File> TraverseSymlinkFileSystemBuilder::build(const std::string& path) const {
+std::unique_ptr<File> TraverseSymlinkFileSystemBuilder::build(const std::string& path) const {
     if (!fs::exists(path)) {
         throw std::invalid_argument("TraverseSymlinkFileSystemBuilder::build - Path does not exist");
     }
 
-    std::shared_ptr<ChecksumCalculator> calculator = nullptr;
+    std::unique_ptr<ChecksumCalculator> calculator = nullptr;
     if (this->algorithm != "") {
         //user specified to calculate the checksums in the file building process
         calculator = ChecksumCalculatorFactory::getCalculator(this->algorithm);

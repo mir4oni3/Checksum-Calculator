@@ -9,13 +9,13 @@
 class VisitorWriter : public Observable {
 protected:
     std::ostream& os;
-    mutable std::shared_ptr<File> currentFile;
+    mutable std::string currentFilePath;
 public:
     VisitorWriter(std::ostream& os);
     virtual ~VisitorWriter() = default;
 
     //write file(and subfiles recursively) and its checksum to a stream
-    void exportFile(const std::shared_ptr<File>&) const;
+    void exportFile(File&) const;
 
     virtual void visitRegularFile(const RegularFile&) const;
     virtual void visitDirectory(const Directory&) const;

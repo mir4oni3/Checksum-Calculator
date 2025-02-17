@@ -37,8 +37,8 @@ TEST_CASE("TestSHA256CalculatorWait", "[SHA256Calculator]") {
 
     //since calculator notifies observers on progress, if
     //FailObserver gets notified, then the calculator is not paused(it should be)
-    std::shared_ptr<FailObserver> failObserver = std::make_shared<FailObserver>();
-    calc.addObserver(failObserver);
+    std::unique_ptr<FailObserver> failObserver = std::make_unique<FailObserver>();
+    calc.addObserver(*failObserver);
 
     //create a long string to force the calculator to read in chunks
     std::string longString(CalcConstants::chunkSize + 10, 'a');
@@ -53,7 +53,7 @@ TEST_CASE("TestSHA256CalculatorWait", "[SHA256Calculator]") {
     asyncWait.wait_for(std::chrono::milliseconds(100));
 
     //remove observer
-    calc.removeObserver(failObserver);
+    calc.removeObserver(*failObserver);
     
     //unpause the calculation
     calc.update(ObserverMessage::resumeCalculation, "");

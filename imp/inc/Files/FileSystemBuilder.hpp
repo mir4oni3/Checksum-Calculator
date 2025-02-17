@@ -10,7 +10,7 @@ protected:
 public:
     virtual ~FileSystemBuilder() = default;
 
-    virtual std::shared_ptr<File> build(const std::string&) const = 0;
+    virtual std::unique_ptr<File> build(const std::string&) const = 0;
     
     void setAlgorithm(const std::string& algorithm);
     void saveFullPaths(bool save);
@@ -18,10 +18,10 @@ public:
 
 class IgnoreSymlinkFileSystemBuilder : public FileSystemBuilder {
 public:
-    std::shared_ptr<File> build(const std::string&) const override;
+    std::unique_ptr<File> build(const std::string&) const override;
 };
 
 class TraverseSymlinkFileSystemBuilder : public FileSystemBuilder {
 public:
-    std::shared_ptr<File> build(const std::string&) const override;
+    std::unique_ptr<File> build(const std::string&) const override;
 };

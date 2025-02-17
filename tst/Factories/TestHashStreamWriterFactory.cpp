@@ -9,7 +9,7 @@ TEST_CASE("TestHashStreamWriterFactoryGetWriter", "[HashStreamWriterFactory]") {
     std::shared_ptr<HashStreamWriter> writer;
 
     std::ostringstream os;
-    std::shared_ptr<ChecksumCalculator> calc = std::make_shared<MD5Calculator>();
+    MD5Calculator calc;
 
     REQUIRE_NOTHROW(writer = HashStreamWriterFactory::getWriter("text", os, calc));
     REQUIRE(std::dynamic_pointer_cast<NormalTextStreamWriter>(writer));

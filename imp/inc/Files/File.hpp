@@ -30,17 +30,17 @@ protected:
 public:
     RegularFile(const std::string& path);
 
-    std::string getChecksum(const std::shared_ptr<ChecksumCalculator>&) const;
+    std::string getChecksum(const ChecksumCalculator&) const;
     void accept(const VisitorWriter& writer) const override;
 };
 
 class Directory : public File {
-    std::vector<std::shared_ptr<File>> files;
+    std::vector<std::unique_ptr<File>> files;
 public:
     Directory(const std::string& path);
 
-    void addFile(std::shared_ptr<File>& file);
-    const std::vector<std::shared_ptr<File>>& getFiles() const;
+    void addFile(std::unique_ptr<File>&& file);
+    const std::vector<std::unique_ptr<File>>& getFiles() const;
 
     void accept(const VisitorWriter& writer) const override;
 };

@@ -4,5 +4,5 @@
 
 class FileSystemBuilderFactory {
 public:
-    static std::shared_ptr<FileSystemBuilder> getBuilder(bool traverse);
+    static std::unique_ptr<FileSystemBuilder> getBuilder(bool traverse);
 };

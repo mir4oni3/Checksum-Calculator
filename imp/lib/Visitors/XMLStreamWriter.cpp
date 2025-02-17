@@ -2,7 +2,7 @@
 
 #include <regex>
 
-XMLStreamWriter::XMLStreamWriter(std::ostream& os, const std::shared_ptr<ChecksumCalculator>& calc) : HashStreamWriter(os, calc) {}
+XMLStreamWriter::XMLStreamWriter(std::ostream& os, ChecksumCalculator& calc) : HashStreamWriter(os, calc) {}
 
 void XMLStreamWriter::visitRegularFile(const RegularFile& file) const {
         VisitorWriter::visitRegularFile(file); //notify observers

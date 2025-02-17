@@ -1,11 +1,11 @@
 #include "Factories/FileSystemBuilderFactory.hpp"
 
-std::shared_ptr<FileSystemBuilder> FileSystemBuilderFactory::getBuilder(bool traverse) {
+std::unique_ptr<FileSystemBuilder> FileSystemBuilderFactory::getBuilder(bool traverse) {
     if (traverse) {
-        return std::make_shared<TraverseSymlinkFileSystemBuilder>();
+        return std::make_unique<TraverseSymlinkFileSystemBuilder>();
     }
     else {
-        return std::make_shared<IgnoreSymlinkFileSystemBuilder>();
+        return std::make_unique<IgnoreSymlinkFileSystemBuilder>();
     }
     return nullptr;
 }

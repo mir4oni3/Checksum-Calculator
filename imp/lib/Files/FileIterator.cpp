@@ -2,31 +2,39 @@
 
 #include <iostream>
 
-FileIterator::FileIterator(const std::shared_ptr<File>& root) {
-    if (!root) {
-        throw std::invalid_argument("FileIterator::FileIterator - nullptr arg");
-    }
+FileIterator::FileIterator(const File& root) {
     stack.push({root, 0});
 }
 
-std::shared_ptr<File> FileIterator::next() {
+bool FileIterator::hasNext() const {
+    return !stack.empty();
+}
+
+const File& FileIterator::next() {
     //DFS file traversal implementation with a stack
     if (stack.empty()) {
-        //nullptr signalizes end of traversal
-        return nullptr;
+        throw std::invalid_argument("FileIterator::next - No more files to return");
     }
 
     auto [file, index] = stack.top();
     stack.pop();
 
-    if (auto dir = std::dynamic_pointer_cast<Directory>(file)) {
-        auto dirfiles = dir->getFiles();
+    try { //executed if file is a directory
+        const Directory& dir = dynamic_cast<const Directory&>(file);
+        const auto& dirfiles = dir.getFiles();
+
         if (index < dirfiles.size()) {
-            //push directory again with incremented index
-            stack.push({dir, index + 1});
-            //push only the next file
-            stack.push({dirfiles[index], 0});
+            if (index < dirfiles.size() - 1) {
+                //push directory again with incremented index
+                //if there are more subfiles in it
+                stack.push({dir, index + 1});
+            }
+            //push the next file
+            stack.push({*dirfiles[index], 0});
         }
+
+    } catch (const std::bad_cast& e) {
+        //not a directory, do nothing
     }
 
     if (index == 0) {

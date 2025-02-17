@@ -6,10 +6,11 @@
 
 class FileIterator {
 protected:
-    std::stack<std::pair<std::shared_ptr<File>, size_t>> stack;
+    std::stack<std::pair<const File&, size_t>> stack;
 public:
-    FileIterator(const std::shared_ptr<File>&);
+    FileIterator(const File&);
     virtual ~FileIterator() = default;
 
-    virtual std::shared_ptr<File> next();
+    bool hasNext() const;
+    virtual const File& next();
 };

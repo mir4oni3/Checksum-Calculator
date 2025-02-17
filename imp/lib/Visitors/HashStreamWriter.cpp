@@ -3,10 +3,7 @@
 #include <iostream>
 #include <thread>
 
-HashStreamWriter::HashStreamWriter(std::ostream& os, const std::shared_ptr<ChecksumCalculator>& calc) : VisitorWriter(os), calc(calc) {
-    if (!calc) {
-        throw std::invalid_argument("HashStreamWriter::HashStreamWriter - Invalid calculator passed");
-    }
+HashStreamWriter::HashStreamWriter(std::ostream& os, ChecksumCalculator& calc) : VisitorWriter(os), calc(calc) {
     tempStream << "\n\n";
     addObserver(calc);
 }
@@ -31,7 +28,7 @@ void HashStreamWriter::pauseListener() const {
         std::cin >> dummy; //wait for input from stdin(blocking the thread)
         if (paused) {
             std::cout << "\033[2J\033[1;1H"; //clear screen
-            notifyObservers(ObserverMessage::resumeCalculation, this->currentFile->getPath());
+            notifyObservers(ObserverMessage::resumeCalculation, this->currentFilePath);
         }
         else {
             notifyObservers(ObserverMessage::pauseCalculation, "");
@@ -43,7 +40,7 @@ void HashStreamWriter::pauseListener() const {
 }
 
 //the Observer should receive messages from calculator as well
-void HashStreamWriter::addObserver(const std::shared_ptr<Observer>& observer) {
+void HashStreamWriter::addObserver(Observer& observer) {
     VisitorWriter::addObserver(observer);
-    calc->addObserver(observer);
+    calc.addObserver(observer);
 }

@@ -7,5 +7,5 @@
 
 class ParserFactory {
 public:
-    static std::shared_ptr<FileHashParser> getParser(std::istream& format);
+    static std::unique_ptr<FileHashParser> getParser(std::istream& format);
 };
