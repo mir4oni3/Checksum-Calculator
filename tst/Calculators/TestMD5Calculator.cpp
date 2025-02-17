@@ -50,7 +50,7 @@ TEST_CASE("TestMD5CalculatorWait", "[MD5Calculator]") {
     });
 
     //wait to ensure the observer does not get notified during the pause
-    asyncWait.wait_for(std::chrono::milliseconds(100));
+    asyncWait.wait_for(std::chrono::milliseconds(500));
 
     //remove observer
     calc.removeObserver(*failObserver);

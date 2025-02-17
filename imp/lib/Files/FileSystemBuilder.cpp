@@ -8,12 +8,12 @@
 
 namespace fs = std::filesystem;
 
-std::unique_ptr<File> FileSystemBuilder::handleDirectory(const std::string& path, const std::unique_ptr<ChecksumCalculator>& calc) const {
+std::unique_ptr<File> FileSystemBuilder::handleDirectory(const std::string& path) const {
     std::unique_ptr<Directory> dir = std::make_unique<Directory>(path);
     dir->setSize(0);
 
     for (const auto& entry : fs::directory_iterator(path)) {
-        std::unique_ptr<File> file = buildCommon(entry.path().string(), calc);
+        std::unique_ptr<File> file = buildCommon(entry.path().string());
         if (!file) {
             //we will store only regular files and directories
             continue;
@@ -29,7 +29,7 @@ std::unique_ptr<File> FileSystemBuilder::handleDirectory(const std::string& path
     return std::move(dir);
 }
 
-std::unique_ptr<File> FileSystemBuilder::buildCommon(const std::string& path, const std::unique_ptr<ChecksumCalculator>& calc) const {
+std::unique_ptr<File> FileSystemBuilder::buildCommon(const std::string& path) const {
     if (fs::is_regular_file(path)) {
         std::unique_ptr<RegularFile> file = std::make_unique<RegularFile>(path);
         file->setSize(fs::file_size(path));
@@ -41,7 +41,7 @@ std::unique_ptr<File> FileSystemBuilder::buildCommon(const std::string& path, co
     }
 
     if (fs::is_directory(path)) {
-       return std::move(handleDirectory(path, calc));
+       return std::move(handleDirectory(path));
     }
 
     return nullptr;
@@ -50,7 +50,7 @@ std::unique_ptr<File> FileSystemBuilder::buildCommon(const std::string& path, co
 //setting the algorithm means that the checksums will be calculated during the file building process
 //default behavior is to build without calculating checksums
 void FileSystemBuilder::setAlgorithm(const std::string& algorithm) {
-    this->algorithm = algorithm;
+    this->calc = ChecksumCalculatorFactory::getCalculator(algorithm);
 }
 
 void FileSystemBuilder::saveFullPaths(bool save) {
@@ -66,24 +66,18 @@ std::unique_ptr<File> FileSystemBuilder::build(const std::string& path) const {
         throw std::invalid_argument("TraverseSymlinkFileSystemBuilder::build - Path does not exist");
     }
 
-    std::unique_ptr<ChecksumCalculator> calculator = nullptr;
-    if (this->algorithm != "") {
-        //user specified to calculate the checksums in the file building process
-        calculator = ChecksumCalculatorFactory::getCalculator(this->algorithm);
-    }
-
     std::string actualPath = path;
     if (this->saveFullPath) {
         actualPath = fs::absolute(path).string();
     }
 
-    return std::move(buildCommon(actualPath, calculator));
+    return std::move(buildCommon(actualPath));
 }
 
 //symlinks will be treated as regular files in these scenarios:
 //  -symlink points to a visited file
 //  -symlink is broken
-std::unique_ptr<File> TraverseSymlinkFileSystemBuilder::buildCommon(const std::string& path, const std::unique_ptr<ChecksumCalculator>& calc) const {
+std::unique_ptr<File> TraverseSymlinkFileSystemBuilder::buildCommon(const std::string& path) const {
     visited.insert(path);
     std::string curPath = path;
 
@@ -92,21 +86,21 @@ std::unique_ptr<File> TraverseSymlinkFileSystemBuilder::buildCommon(const std::s
             curPath = fs::read_symlink(path).string();
             if (visited.find(curPath) != visited.end()) {
                 //symlink points to visited file; treat as regular file
-                return std::move(FileSystemBuilder::buildCommon(path, calc));
+                return std::move(FileSystemBuilder::buildCommon(path));
             }
         } catch (const fs::filesystem_error& e) {
             //broken symlink, treat as regular file
-            return std::move(FileSystemBuilder::buildCommon(path, calc));
+            return std::move(FileSystemBuilder::buildCommon(path));
         }
     }
 
     if (fs::is_symlink(curPath)) {
         //symlink points to symlink, traverse
-        return std::move(TraverseSymlinkFileSystemBuilder::buildCommon(curPath, calc));
+        return std::move(TraverseSymlinkFileSystemBuilder::buildCommon(curPath));
     }
     else {
         //symlink points to regular file or directory
-        return std::move(FileSystemBuilder::buildCommon(curPath, calc));
+        return std::move(FileSystemBuilder::buildCommon(curPath));
     }
 
     return nullptr;
