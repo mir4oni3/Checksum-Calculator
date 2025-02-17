@@ -64,6 +64,11 @@ const std::vector<std::unique_ptr<File>>& Directory::getFiles() const {
     return this->files;
 }
 
+void Directory::sortFiles() {
+    std::sort(this->files.begin(), this->files.end(), [](const std::unique_ptr<File>& a, const std::unique_ptr<File>& b) {
+        return a->getPath() < b->getPath();
+    });
+}
 void Directory::accept(const VisitorWriter& writer) const {
     writer.visitDirectory(*this);
 }

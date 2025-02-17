@@ -5,7 +5,7 @@ std::unique_ptr<FileSystemBuilder> FileSystemBuilderFactory::getBuilder(bool tra
         return std::make_unique<TraverseSymlinkFileSystemBuilder>();
     }
     else {
-        return std::make_unique<IgnoreSymlinkFileSystemBuilder>();
+        return std::make_unique<FileSystemBuilder>();
     }
     return nullptr;
 }

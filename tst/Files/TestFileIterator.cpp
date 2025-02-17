@@ -26,8 +26,9 @@ TEST_CASE("TestFileIteratorNextRegularFile", "[fileIterator]") {
 //these files with random content were created with the following bash command:
 // for i in {1..7}; do     dd if=/dev/urandom of=gibberishFile${i}.txt bs=1K count=1; done
 TEST_CASE("TestFileIteratorNextDirectory", "[fileIterator]") {
-    IgnoreSymlinkFileSystemBuilder builder;
+    FileSystemBuilder builder;
     builder.saveFullPaths(true);
+    builder.setSortFiles(true);
     std::string path = HelperTestFunctions::getResourceFilePath("sampleTestDirectory");
     std::unique_ptr<File> file = builder.build(path);
     FileIterator fileIterator(*file);

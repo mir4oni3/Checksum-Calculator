@@ -9,5 +9,5 @@ TEST_CASE("TestFileSystemBuilderFactoryGetBuilder", "[FileSystemBuilderFactory]"
     REQUIRE(std::dynamic_pointer_cast<TraverseSymlinkFileSystemBuilder>(builder));
 
     REQUIRE_NOTHROW(builder = FileSystemBuilderFactory::getBuilder(false));
-    REQUIRE(std::dynamic_pointer_cast<IgnoreSymlinkFileSystemBuilder>(builder));
+    REQUIRE(std::dynamic_pointer_cast<FileSystemBuilder>(builder));
 }

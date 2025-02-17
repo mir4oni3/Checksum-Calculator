@@ -41,6 +41,7 @@ public:
 
     void addFile(std::unique_ptr<File>&& file);
     const std::vector<std::unique_ptr<File>>& getFiles() const;
-
+    void sortFiles();
+    
     void accept(const VisitorWriter& writer) const override;
 };

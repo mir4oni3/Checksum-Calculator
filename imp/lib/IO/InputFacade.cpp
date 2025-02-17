@@ -4,28 +4,34 @@
 
 std::string InputFacade::getValidatedArg(TCLAP::ValueArg<std::string>& arg, bool isRegular, fs::perms perms = fs::perms::owner_read) const {
     std::string value = arg.getValue();
-   if (arg.isSet() && !fs::exists(value)) {
+    if (!arg.isSet()) {
+        return value;
+    }
+
+    if (!fs::exists(value)) {
         std::cerr << "Argument file does not exist" << std::endl;
         std::cerr << "Please rerun the program with correct arguments" << std::endl;
         exit(2);
     }
-
-    if (arg.isSet()) {
-        if (isRegular && !fs::is_regular_file(value)) {
-            std::cerr << "Error: Argument is not a regular file but it should be: " << arg.getValue() << std::endl;
-        }
-        if (!isRegular && !fs::is_directory(value)) {
-            std::cerr << "Error: Argument is not a directory but it should be: " << arg.getValue() << std::endl;
-        }
+   
+    if (isRegular && !fs::is_regular_file(value)) {
+        std::cerr << "Error: Argument is not a regular file but it should be: " << arg.getValue() << std::endl;
         std::cerr << "Please rerun the program with correct arguments" << std::endl;
         exit(3);
-        }
+    }
 
-        if (arg.isSet() && (fs::status(value).permissions() & perms) != perms) {
-        std::cerr << "Error: No read permissions for argument file: " << value << std::endl;
+    if (!isRegular && !fs::is_directory(value)) {
+        std::cerr << "Error: Argument is not a directory but it should be: " << arg.getValue() << std::endl;
         std::cerr << "Please rerun the program with correct arguments" << std::endl;
         exit(4);
     }
+
+    if ((fs::status(value).permissions() & perms) != perms) {
+        std::cerr << "Error: Incorrect permissions for argument file: " << value << std::endl;
+        std::cerr << "Please rerun the program with correct arguments" << std::endl;
+        exit(5);
+    }
+    
     return value;
 }
 
@@ -54,7 +60,7 @@ InputFacade::InputFacade(int argc, char** argv) {
     this->traverse = !noTraverseArg.getValue();
     this->buildChecksums = buildChecksumsArg.getValue();
     this->saveTo = getValidatedArg(saveToArg, true, fs::perms::owner_write);
-    
+
     //validated later
     this->format = formatArg.getValue();
     this->algorithm = algorithmArg.getValue();
