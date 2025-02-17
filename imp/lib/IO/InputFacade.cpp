@@ -1,11 +1,8 @@
 #include "IO/InputFacade.hpp"
 
 #include <cstdlib>
-#include <filesystem>
 
-namespace fs = std::filesystem;
-
-std::string InputFacade::getValidatedArg(TCLAP::ValueArg<std::string>& arg) const {
+std::string InputFacade::getValidatedArg(TCLAP::ValueArg<std::string>& arg, bool isRegular, fs::perms perms = fs::perms::owner_read) const {
     std::string value = arg.getValue();
    if (arg.isSet() && !fs::exists(value)) {
         std::cerr << "Argument file does not exist" << std::endl;
@@ -13,13 +10,18 @@ std::string InputFacade::getValidatedArg(TCLAP::ValueArg<std::string>& arg) cons
         exit(2);
     }
 
-    if (arg.isSet() && !fs::is_regular_file(value) && !fs::is_directory(value)) {
-        std::cerr << "Error: Argument is neither a file nor a directory: " << arg.getValue() << std::endl;
+    if (arg.isSet()) {
+        if (isRegular && !fs::is_regular_file(value)) {
+            std::cerr << "Error: Argument is not a regular file but it should be: " << arg.getValue() << std::endl;
+        }
+        if (!isRegular && !fs::is_directory(value)) {
+            std::cerr << "Error: Argument is not a directory but it should be: " << arg.getValue() << std::endl;
+        }
         std::cerr << "Please rerun the program with correct arguments" << std::endl;
         exit(3);
-    }
+        }
 
-    if (arg.isSet() && (fs::status(value).permissions() & fs::perms::owner_read) == fs::perms::none) {
+        if (arg.isSet() && (fs::status(value).permissions() & perms) != perms) {
         std::cerr << "Error: No read permissions for argument file: " << value << std::endl;
         std::cerr << "Please rerun the program with correct arguments" << std::endl;
         exit(4);
@@ -47,15 +49,15 @@ InputFacade::InputFacade(int argc, char** argv) {
     }
 
     //validated here
-    this->checksums = getValidatedArg(checksumsArg);
-    this->path = getValidatedArg(pathArg);
+    this->checksums = getValidatedArg(checksumsArg, true);
+    this->path = getValidatedArg(pathArg, false);
     this->traverse = !noTraverseArg.getValue();
     this->buildChecksums = buildChecksumsArg.getValue();
-
+    this->saveTo = getValidatedArg(saveToArg, true, fs::perms::owner_write);
+    
     //validated later
     this->format = formatArg.getValue();
     this->algorithm = algorithmArg.getValue();
-    this->saveTo = saveToArg.getValue();
 }
 
 std::string InputFacade::getPath() const {

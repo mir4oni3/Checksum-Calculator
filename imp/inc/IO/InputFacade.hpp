@@ -4,6 +4,9 @@
 
 #include <iostream>
 #include <string>
+#include <filesystem>
+
+namespace fs = std::filesystem;
 
 class InputFacade {
     std::string path;
@@ -26,5 +29,5 @@ public:
     std::string getSaveTo() const;
     
 private:
-    std::string getValidatedArg(TCLAP::ValueArg<std::string>&) const;
+    std::string getValidatedArg(TCLAP::ValueArg<std::string>&, bool, fs::perms) const;
 };
