@@ -7,31 +7,23 @@ std::string InputFacade::getValidatedArg(TCLAP::ValueArg<std::string>& arg, bool
     if (!arg.isSet()) {
         return value;
     }
-
+    
     if (!fs::exists(value)) {
-        std::cerr << "Argument file does not exist" << std::endl;
-        std::cerr << "Please rerun the program with correct arguments" << std::endl;
-        exit(2);
+        throw std::invalid_argument("Argument file does not exist");
     }
    
     if (isRegular && !fs::is_regular_file(value)) {
-        std::cerr << "Error: Argument is not a regular file but it should be: " << arg.getValue() << std::endl;
-        std::cerr << "Please rerun the program with correct arguments" << std::endl;
-        exit(3);
+       throw std::invalid_argument("Error: Argument is not a regular file but it should be: " + arg.getValue());
     }
 
     if (!isRegular && !fs::is_directory(value)) {
-        std::cerr << "Error: Argument is not a directory but it should be: " << arg.getValue() << std::endl;
-        std::cerr << "Please rerun the program with correct arguments" << std::endl;
-        exit(4);
+        throw std::invalid_argument("Error: Argument is not a directory but it should be: " + arg.getValue());
     }
 
     if ((fs::status(value).permissions() & perms) != perms) {
-        std::cerr << "Error: Incorrect permissions for argument file: " << value << std::endl;
-        std::cerr << "Please rerun the program with correct arguments" << std::endl;
-        exit(5);
+       throw std::invalid_argument("Error: Incorrect permissions for argument file: " + arg.getValue());
     }
-    
+
     return value;
 }
 
@@ -49,9 +41,7 @@ InputFacade::InputFacade(int argc, char** argv) {
     try {
         cmd.parse(argc, argv);
     } catch (TCLAP::ArgException &e) {
-        std::cerr << "error: " << e.error() << " for arg " << e.argId() << std::endl;
-        std::cerr << "Please rerun the program with correct arguments" << std::endl;
-        exit(1);
+        throw std::invalid_argument(e.what());
     }
 
     //validated here
