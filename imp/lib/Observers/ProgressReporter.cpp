@@ -37,7 +37,6 @@ void ProgressReporter::update(ObserverMessage message, const std::string& value)
     }
 }
 
-#include <thread>
 void ProgressReporter::visualizeProgressBar() const {
     if (!totalBytesKnown) {
         throw std::runtime_error("ProgressReporter::visualizeProgressBar - Total size unknown");

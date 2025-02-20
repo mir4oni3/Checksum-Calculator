@@ -4,6 +4,8 @@
 #include <sstream>
 #include <iomanip>
 
+const std::string MD5Calculator::md5Regex = "[0-9a-fA-F]{32}";
+
 std::string MD5Calculator::calculate(std::istream& is) const {
     if (!is) {
         throw std::invalid_argument("MD5Calculator::calculate - Invalid input stream state");
@@ -53,4 +55,9 @@ std::string MD5Calculator::calculate(std::istream& is) const {
     is.clear();
     
     return hexResult.str();
+}
+
+std::regex MD5Calculator::getRegex() const {
+    static const std::regex reg(MD5Calculator::md5Regex);
+    return reg;
 }

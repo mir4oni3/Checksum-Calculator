@@ -18,3 +18,7 @@ void ChecksumCalculator::wait() const {
         std::this_thread::sleep_for(std::chrono::milliseconds(CalcConstants::waitTime));
     }
 }
+
+bool ChecksumCalculator::verifyChecksum(const std::string& checksum) const {
+    return std::regex_match(checksum, this->getRegex());
+}

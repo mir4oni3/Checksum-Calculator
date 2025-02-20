@@ -12,6 +12,7 @@ namespace ReporterConstants {
 }
 
 class ProgressReporter : public Observer {
+protected:
     std::ostream& os;
     size_t totalBytes = 0;
     bool totalBytesKnown = false;

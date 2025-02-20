@@ -4,6 +4,8 @@
 #include <sstream>
 #include <iomanip>
 
+const std::string SHA256Calculator::SHA256Regex = "[0-9a-fA-F]{64}";   
+
 std::string SHA256Calculator::calculate(std::istream& is) const {
     if (!is) {
         throw std::invalid_argument("SHA256Calculator::calculate - Invalid input stream state");
@@ -53,4 +55,9 @@ std::string SHA256Calculator::calculate(std::istream& is) const {
     is.clear();
 
     return hexResult.str();
+}
+
+std::regex SHA256Calculator::getRegex() const {
+    static const std::regex reg (SHA256Calculator::SHA256Regex);
+    return reg;
 }
