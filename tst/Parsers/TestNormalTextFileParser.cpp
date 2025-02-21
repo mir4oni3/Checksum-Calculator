@@ -21,14 +21,19 @@ TEST_CASE("TestParseLine", "[normal_text_file_parser]") {
     SECTION("Invalid line") {
         REQUIRE_THROWS_AS(parser.parseLine("invalid line", files), std::runtime_error);
         REQUIRE_THROWS_AS(parser.parseLine("invalid@hash *valid/path", files), std::runtime_error);
-        REQUIRE_THROWS_AS(parser.parseLine("valid123hash */invalid/path", files), std::runtime_error);
-        REQUIRE_THROWS_AS(parser.parseLine("valid123hash *invalid/path/", files), std::runtime_error);
+        REQUIRE_THROWS_AS(parser.parseLine("123cccc4444 *invalid/path/", files), std::runtime_error);
     }
 
     SECTION("Valid line") {
-        REQUIRE_NOTHROW(parser.parseLine("my123hash123 /path/to/file", files));
-        REQUIRE(files.size() == 1);
-        REQUIRE(files.find("/path/to/file") != files.end());
-        REQUIRE(files["/path/to/file"] == "1234567890");
+        REQUIRE_NOTHROW(parser.parseLine("acd123 *path/to/file", files));
+        REQUIRE_NOTHROW(parser.parseLine("fccad *path////to///file", files));
+        REQUIRE_NOTHROW(parser.parseLine("fff333 *path/to/another/file", files));
+        REQUIRE(files.size() == 3);
+        REQUIRE(files.find("path/to/file") != files.end());
+        REQUIRE(files.find("path/to/another/file") != files.end());
+        REQUIRE(files.find("path////to///file") != files.end());
+        REQUIRE(files["path/to/file"] == "acd123");
+        REQUIRE(files["path/to/another/file"] == "fff333");
+        REQUIRE(files["path////to///file"] == "fccad");
     }
 }

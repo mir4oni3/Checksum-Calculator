@@ -16,6 +16,9 @@ public:
     void wait() const {
         ChecksumCalculator::wait();
     }
+    std::regex getRegex() const override {
+        return std::regex("");
+    }
 };
 
 TEST_CASE("TestChecksumCalculatorUpdate", "[ChecksumCalculator]") {
